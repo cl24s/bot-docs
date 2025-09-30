@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alapok - Trading Bot Dokumentáció</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <!-- Header -->
@@ -25,24 +25,19 @@
     <!-- Navigation -->
     <nav>
         <ul>
-            <li><a href="index.html">Kezdőlap</a></li>
-            <li><a href="api.html">Bot</a></li>
-            <li><a href="alapok.html" class="active">Alapok</a></li>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html">Bot</a></li>
+            <li><a href="alapfogalmak.html" class="active">Alapok</a></li>
+            <li><a href="chris.html">Chris</a></li>
         </ul>
     </nav>
 
     <div class="container">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <h3>Alapfogalmak</h3>
+            <h3>Alapok</h3>
             <ul>
-                <li><a href="#ltf-htf" class="active"><i class="fas fa-chart-line"></i> LTF és HTF</a></li>
-                <li><a href="#timeframes"><i class="fas fa-clock"></i> Timeframe-ek</a></li>
-                <li><a href="#guardrails"><i class="fas fa-shield-alt"></i> Guardrails</a></li>
-                <li><a href="#vwap"><i class="fas fa-wave-square"></i> VWAP</a></li>
-                <li><a href="#confluence"><i class="fas fa-check-double"></i> Confluence Score</a></li>
-                <li><a href="#market-context"><i class="fas fa-globe"></i> Market Context</a></li>
-                <li><a href="#risk-management"><i class="fas fa-balance-scale"></i> Risk Management</a></li>
+                <li><a href="alapfogalmak.html" class="active"><i class="fas fa-book"></i> Alapfogalmak</a></li>
             </ul>
         </aside>
 
@@ -218,6 +213,13 @@ expected_total_profit ≥ 2.5 × (taker + maker + slippage)</pre>
         </aside>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- Search index -->
+    <script src="../search-index.js"></script>
+    <!-- Search functionality -->
+    <script src="../search.js"></script>
+    <!-- Main script -->
+    <script src="../script.js"></script>
 </body>
 </html>

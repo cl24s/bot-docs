@@ -111,6 +111,40 @@ function initMobileMenu() {
 // Run on load
 window.addEventListener('load', initMobileMenu);
 
+// Back to Top Button
+function createBackToTopButton() {
+    // Check if button already exists
+    if (document.querySelector('.back-to-top')) return;
+    
+    const button = document.createElement('button');
+    button.className = 'back-to-top';
+    button.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    button.setAttribute('aria-label', 'Vissza a tetejére');
+    button.setAttribute('title', 'Vissza a tetejére');
+    
+    document.body.appendChild(button);
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            button.classList.add('show');
+        } else {
+            button.classList.remove('show');
+        }
+    });
+    
+    // Scroll to top on click
+    button.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
+// Initialize back to top button
+window.addEventListener('load', createBackToTopButton);
+
 // Handle window resize
 let resizeTimer;
 window.addEventListener('resize', function() {

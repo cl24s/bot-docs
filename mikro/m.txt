@@ -1,0 +1,263 @@
+Oké, csináljunk belőle egy precíz belépő–kilépő “mikro-időzítés” modult.
+Az alábbi logika 1–5 perces microtrend alapján időzíti a 10–15 perces scalp belépőt, és ellenőrzi, hogy a 15m bias irányával egybevág-e.
+
+Logika – röviden
+
+Idősíkok: micro = 1m/5m, bias = 15m
+
+Indikátorok (micro): EMA9, EMA21; StochRSI(14,14,3,3); OBV v. CVD (delta); opcionálisan 5–10 mp-enkénti order book snapshot
+
+Alapelv: csak akkor nyitunk, ha
+
+a 15m bias long/short irányt mutat,
+
+a microtrend (EMA9↕EMA21 + StochRSI forduló) ugyanabba az irányba fordul,
+
+volumenerő (OBV/CVD) megerősíti,
+
+order book nem állja el az utat (nincs masszív fal közvetlenül előttünk).
+
+Részletes szabályok
+1) Microtrend (EMA9 / EMA21)
+
+Stack: EMA9 > EMA21 = micro long; EMA9 < EMA21 = micro short
+
+Keresztezés (crossover) trigger: akkor erős, ha a keresztezés gyertya-záráskor történik (nem intrabar), és legalább 2 gyertyán keresztül fennmarad (debounce).
+
+2) StochRSI(14,14,3,3)
+
+Short trigger: előtte overbought (K,D ≥ 80), majd K lefelé keresztezi D-t és <80 alá csúszik → bearish forduló.
+
+Long trigger: előtte oversold (K,D ≤ 20), majd K felfelé keresztezi D-t és >20 fölé jön → bullish forduló.
+
+Debounce: a trigger után 1 zárógyertya megerősítés (ne false tick legyen).
+
+3) Volumenerő (OBV vagy CVD)
+
+CVD/OBV trendirány az utolsó N=20 micro gyertyában legyen egyező irányú (pl. shortnál csökkenő, longnál növekvő).
+
+Momentumfeltétel: az aktuális micro gyertya volumen ≥ 20-bar átlag × 1.1 (min. 10% többlet), vagy a CVD_delta |értéke| ≥ Z-score 1.0 az utolsó 50 barhoz képest.
+
+4) Order book snapshot (nem tick-by-tick)
+
+Mintavétel 5–10 mp-enként.
+
+Imbalance: (sum_topN_bids - sum_topN_asks) / (sum_topN_bids + sum_topN_asks)
+
+longhoz imbalance ≥ +0.15, shorthöz ≤ −0.15 (topN=10 szint jó kiinduló).
+
+Közeli fal: az entryhez képest ±0.20–0.40% sávban NE legyen „fal” ≥ 0.8×(topN átlag).
+
+Ha van, várj: vagy jó áron limit (fal elé nem lépünk), vagy skip.
+
+5) Belépési forma
+
+Alap: limit pullbackre vagy stop-market kitörésre; scalpban a slippage minimalizálás fontos.
+
+Belépő pillanata: amikor mind a 4 réteg egyszerre igaz (bias egyezés + micro EMA stack/kereszt + StochRSI forduló + volume/CVD ok + DOM nem tilt).
+
+6) Exit
+
+SL: a micro swing túloldalán (legutóbbi lokális HL/LH), vagy ATR(m5) × 1.0–1.3.
+
+TP1/TP2:
+
+TP1: közelben lévő likviditási zóna/fal előtt 0.05–0.10%-kal.
+
+TP2: VWAP / 15m EMA21/50 / Fibonacci következő szint.
+
+Trailing: ha TP1 teljesült → SL → breakeven, majd ATR-trail (m5, ×1.2) vagy gyertyás HL/LH trail.
+
+Hard exit: 15m ellenjelzés (pl. bias megtörik: EMA21↑/↓ átmenet + VWAP áttörés és zárás az ellenoldalon).
+
+Példa – JSON kimenet (SHORT belépő)
+{
+  "timestamp_utc": "2025-09-23T21:36:00Z",
+  "symbol": "ETHUSDT",
+  "timeframes": { "bias_tf": "15m", "micro_tf": "5m" },
+
+  "bias_15m": { "dir": "SHORT", "confidence": 0.68, "vwap_relation": "below" },
+
+  "micro_signals": {
+    "ema": {
+      "ema9": 2431.4,
+      "ema21": 2432.1,
+      "stack": "SHORT",
+      "cross_event": { "type": "BEAR_CROSS", "bars_since": 2, "confirmed_close": true }
+    },
+    "stochrsi": {
+      "k": 74.2,
+      "d": 79.1,
+      "state_prev": "OVERBOUGHT",
+      "turn": "DOWN",
+      "confirm_close_bars": 1
+    },
+    "volume_strength": {
+      "cvd_delta": -185000,
+      "cvd_zscore_50": -1.3,
+      "bar_volume": 1.18,
+      "bar_volume_basis": "20_bar_avg"
+    }
+  },
+
+  "orderbook_snapshot": {
+    "ts": "2025-09-23T21:35:55Z",
+    "best_bid": 2431.1,
+    "best_ask": 2431.3,
+    "spread": 0.2,
+    "top10": { "bids_usd": 3_450_000, "asks_usd": 4_120_000 },
+    "imbalance": -0.088,
+    "nearby_liquidity": {
+      "sell_wall_above_pct": 0.32,
+      "sell_wall_usd": 1_250_000,
+      "buy_wall_below_pct": 0.28,
+      "buy_wall_usd": 740_000
+    },
+    "dom_blocked": false,
+    "notes": "Nincs masszív fal közvetlenül az entry fölött"
+  },
+
+  "entry_plan": {
+    "direction": "SHORT",
+    "type": "LIMIT",
+    "price": 2431.0,
+    "reason": [
+      "15m bias SHORT + ár VWAP alatt",
+      "5m EMA9<EMA21 + bearish cross (2 bar óta tart)",
+      "StochRSI overbought-ból lefelé fordult és gyertyazárással megerősítve",
+      "CVD negatív és erős (zscore<-1)",
+      "Order book nem tilt (nincs nagy fal közel)"
+    ]
+  },
+
+  "risk": {
+    "atr_tf": "5m",
+    "atr": 3.8,
+    "sl_price": 2436.2,
+    "sl_basis": "last LH + 1.0xATR",
+    "position_qty": 15.0,
+    "leverage": 5,
+    "account_risk_pct": 0.5
+  },
+
+  "targets": {
+    "tp1": { "price": 2426.8, "size_pct": 50, "basis": "nearby_liquidity_gap" },
+    "tp2": { "price": 2421.5, "size_pct": 30, "basis": "15m lower band / fib 0.382" },
+    "trail": { "mode": "ATR", "tf": "5m", "mult": 1.2, "size_pct": 20 }
+  },
+
+  "exits": {
+    "breakeven_on_tp1": true,
+    "hard_exit_rules": [
+      "15m close above VWAP + EMA21 up-cross",
+      "5m bullish EMA restack (EMA9>EMA21) és StochRSI bull forduló"
+    ]
+  },
+
+  "decision": { "action": "OPEN_SHORT", "confidence": 0.74 }
+}
+
+Példa – JSON kimenet (LONG belépő)
+{
+  "timestamp_utc": "2025-09-23T10:12:00Z",
+  "symbol": "BTCUSDT",
+  "timeframes": { "bias_tf": "15m", "micro_tf": "1m" },
+
+  "bias_15m": { "dir": "LONG", "confidence": 0.72, "vwap_relation": "above" },
+
+  "micro_signals": {
+    "ema": {
+      "ema9": 61234.5,
+      "ema21": 61220.1,
+      "stack": "LONG",
+      "cross_event": { "type": "BULL_CROSS", "bars_since": 1, "confirmed_close": true }
+    },
+    "stochrsi": {
+      "k": 26.4,
+      "d": 22.7,
+      "state_prev": "OVERSOLD",
+      "turn": "UP",
+      "confirm_close_bars": 1
+    },
+    "volume_strength": {
+      "cvd_delta": 530000,
+      "cvd_zscore_50": 1.5,
+      "bar_volume": 1.22,
+      "bar_volume_basis": "20_bar_avg"
+    }
+  },
+
+  "orderbook_snapshot": {
+    "ts": "2025-09-23T10:11:55Z",
+    "best_bid": 61233.8,
+    "best_ask": 61234.8,
+    "spread": 1.0,
+    "top10": { "bids_usd": 12_200_000, "asks_usd": 9_600_000 },
+    "imbalance": 0.119,
+    "nearby_liquidity": {
+      "sell_wall_above_pct": 0.45,
+      "sell_wall_usd": 5_400_000,
+      "buy_wall_below_pct": 0.18,
+      "buy_wall_usd": 2_100_000
+    },
+    "dom_blocked": false,
+    "notes": "Fenti fal 0.45%-ra van; TP1-et kicsit előtte tűzzük ki."
+  },
+
+  "entry_plan": {
+    "direction": "LONG",
+    "type": "LIMIT",
+    "price": 61234.2,
+    "reason": [
+      "15m bias LONG + ár VWAP felett",
+      "1m EMA9>EMA21 bullish restack",
+      "StochRSI oversold-ból felfelé keresztezett",
+      "CVD pozitív és erős",
+      "Order book nem tilt; fal távolabb, TP1-t alá tesszük"
+    ]
+  },
+
+  "risk": {
+    "atr_tf": "1m",
+    "atr": 14.0,
+    "sl_price": 61210.0,
+    "sl_basis": "last HL - 1.0xATR",
+    "position_qty": 0.08,
+    "leverage": 3,
+    "account_risk_pct": 0.6
+  },
+
+  "targets": {
+    "tp1": { "price": 61262.0, "size_pct": 50, "basis": "below sell wall (0.45%)" },
+    "tp2": { "price": 61305.0, "size_pct": 30, "basis": "15m band/fib 0.382" },
+    "trail": { "mode": "HL_TRAIL", "tf": "1m", "lookback_bars": 6, "size_pct": 20 }
+  },
+
+  "exits": {
+    "breakeven_on_tp1": true,
+    "hard_exit_rules": [
+      "15m close below VWAP",
+      "1m bearish restack (EMA9<EMA21) + StochRSI down turn"
+    ]
+  },
+
+  "decision": { "action": "OPEN_LONG", "confidence": 0.77 }
+}
+
+Egy-kattos “ellenőrző lista” (botnak)
+
+Bias 15m egyezik a jelölt iránnyal?
+
+EMA9/EMA21 micro stack +/- vagy friss cross megvan és zárással megerősítve?
+
+StochRSI ellenzónából visszafordult és gyertyazárás igazolta?
+
+CVD/OBV irány egyezik és momentum ≥ 1.1×20-bar?
+
+Order book: nincs közeli fal az entry előtt? (±0.2–0.4%)
+
+SL/TP: SL = micro swing ± ATR; TP1 fal előtt; TP1→BE; trail aktív.
+
+Ha bármelyik NEM, WAIT (nem kergetünk gyertyát).
+
+Ha szeretnéd, átalakítom ezt szigorú, géppel ellenőrizhető szabálykészletté (ENUM-okkal, küszöbökkel), amit be tudsz húzni a botod “decision engine”-jébe.

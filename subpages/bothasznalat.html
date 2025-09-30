@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bot Használat - Trading Bot Dokumentáció</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <!-- Header -->
@@ -25,9 +25,10 @@
     <!-- Navigation -->
     <nav>
         <ul>
-            <li><a href="index.html">Kezdőlap</a></li>
-            <li><a href="api.html" class="active">Bot</a></li>
-            <li><a href="alapok.html">Alapok</a></li>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html" class="active">Bot</a></li>
+            <li><a href="alapfogalmak.html">Alapok</a></li>
+            <li><a href="chris.html">Chris</a></li>
         </ul>
     </nav>
 
@@ -36,17 +37,14 @@
         <aside class="sidebar">
             <h3>Bot</h3>
             <ul>
-                <li><a href="api.html" class="active"><i class="fas fa-rocket"></i> Bot Használat</a></li>
-                <li><a href="#overview"><i class="fas fa-info-circle"></i> Áttekintés</a></li>
-                <li><a href="#arguments"><i class="fas fa-terminal"></i> Argumentumok</a></li>
-                <li><a href="#modes"><i class="fas fa-cogs"></i> Futtatási módok</a></li>
-                <li><a href="#examples"><i class="fas fa-code"></i> Példák</a></li>
+                <li><a href="bothasznalat.html" class="active"><i class="fas fa-rocket"></i> Bot Használat</a></li>
+                <li><a href="launcher.html"><i class="fas fa-play-circle"></i> Launcher</a></li>
+                <li><a href="trend_monitor.html"><i class="fas fa-chart-area"></i> Trend Monitor</a></li>
             </ul>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <h1>Bot Használat</h1>
             
             <p>A Trading Bot parancssori alkalmazás, amely Python argumentumokkal konfigurálható. Az alábbi útmutató részletezi az összes elérhető opciót és használati módot.</p>
 
@@ -235,6 +233,13 @@
         </aside>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- Search index -->
+    <script src="../search-index.js"></script>
+    <!-- Search functionality -->
+    <script src="../search.js"></script>
+    <!-- Main script -->
+    <script src="../script.js"></script>
 </body>
 </html>

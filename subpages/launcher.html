@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launcher - Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html" class="active">Bot</a></li>
+            <li><a href="alapfogalmak.html">Alapok</a></li>
+            <li><a href="chris.html">Chris</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Bot</h3>
+            <ul>
+                <li><a href="bothasznalat.html"><i class="fas fa-rocket"></i> Bot Használat</a></li>
+                <li><a href="launcher.html" class="active"><i class="fas fa-play-circle"></i> Launcher</a></li>
+                <li><a href="trend_monitor.html"><i class="fas fa-chart-area"></i> Trend Monitor</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Launcher - Egységes Indító</h1>
+            
+            <p>A Launcher egy egységes indító script, amely különböző bot utility-ket futtat egyetlen parancsból. Alapértelmezetten a CLA (Command Line Application) web interfészt indítja.</p>
+
+            <section id="overview">
+                <h2>Áttekintés</h2>
+                
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py           <span class="code-keyword"># CLA indítása (alapértelmezett)</span>
+<span class="code-keyword">python</span> launcher.py <span class="code-property">-i</span>        <span class="code-keyword"># Log importer futtatása</span>
+<span class="code-keyword">python</span> launcher.py <span class="code-property">-u</span>        <span class="code-keyword"># Database update futtatása</span></pre>
+                </div>
+
+                <h3>Főbb funkciók</h3>
+                <ul class="feature-list">
+                    <li>CLA web interface indítása</li>
+                    <li>Log import automatizálás</li>
+                    <li>Database frissítés</li>
+                    <li>Market context generálás</li>
+                    <li>Kombinált műveletek</li>
+                </ul>
+            </section>
+
+            <section id="actions">
+                <h2>Főbb Műveletek</h2>
+
+                <h3>1. CLA Indítása (Alapértelmezett)</h3>
+                <p>Indítja a Flask-alapú web dashboard-ot bot kezeléshez.</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py</pre>
+                </div>
+                <ul>
+                    <li>Automatikusan a <code>cla/</code> könyvtárba vált</li>
+                    <li>Futtatja az <code>app.py</code> Flask alkalmazást</li>
+                    <li>Web interface elérhető: <code>http://localhost:5000</code></li>
+                </ul>
+
+                <h3>2. Log Importer (-i, --import-logs)</h3>
+                <p>Importálja a szegmentált log fájlokat az adatbázisba.</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py <span class="code-property">-i</span>
+
+<span class="code-keyword"># Opciók:</span>
+<span class="code-property">--status</span>              <span class="code-keyword"># Import státusz megjelenítése</span>
+<span class="code-property">--logs-dir</span> <span class="code-string">logs</span>      <span class="code-keyword"># Log könyvtár (alapértelmezett: logs)</span>
+<span class="code-property">--grace-minutes</span> <span class="code-value">10</span>  <span class="code-keyword"># Grace period percben</span></pre>
+                </div>
+
+                <h3>3. Database Update (-u, --update)</h3>
+                <p>Frissíti az adatbázist friss piaci adatokkal.</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py <span class="code-property">-u</span>
+
+<span class="code-keyword"># Opciók:</span>
+<span class="code-property">--download-only</span>       <span class="code-keyword"># Csak letöltés</span>
+<span class="code-property">--import-only</span>         <span class="code-keyword"># Csak import</span>
+<span class="code-property">--symbol</span> <span class="code-string">ETHUSDT</span>     <span class="code-keyword"># Szimbólum (alapértelmezett: ETHUSDT)</span>
+<span class="code-property">--days</span> <span class="code-value">7</span>              <span class="code-keyword"># Napok száma (alapértelmezett: 7)</span></pre>
+                </div>
+
+                <h3>4. Teljes Frissítés (-a, --all)</h3>
+                <p>Futtatja a log import-ot ÉS a database update-et egymás után.</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py <span class="code-property">-a</span>
+
+<span class="code-keyword"># Lépések:</span>
+1. Log importer futtatása
+2. Database update futtatása
+3. Sikeres befejezés jelentése</pre>
+                </div>
+            </section>
+
+            <section id="examples">
+                <h2>Használati Példák</h2>
+
+                <h3>Példa 1: CLA indítása</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py</pre>
+                </div>
+                <p>Elindítja a web dashboard-ot a böngészőben.</p>
+
+                <h3>Példa 2: Log import státusz ellenőrzése</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py <span class="code-property">-i</span> <span class="code-property">--status</span></pre>
+                </div>
+                <p>Megjeleníti az import státuszt import futtatása nélkül.</p>
+
+                <h3>Példa 3: Database frissítés csak letöltéssel</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py <span class="code-property">-u</span> <span class="code-property">--download-only</span> <span class="code-property">--symbol</span> <span class="code-string">BTCUSDT</span> <span class="code-property">--days</span> <span class="code-value">14</span></pre>
+                </div>
+                <p>Letölti a BTCUSDT adatokat 14 napra, de nem importálja.</p>
+
+                <h3>Példa 4: Teljes frissítés egyedi beállításokkal</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> launcher.py <span class="code-property">-a</span> <span class="code-property">--logs-dir</span> <span class="code-string">custom_logs</span> <span class="code-property">--symbol</span> <span class="code-string">SOLUSDT</span></pre>
+                </div>
+                <p>Futtatja a teljes frissítést egyedi log könyvtárral és szimbólummal.</p>
+            </section>
+
+            <section id="workflow">
+                <h2>Munkafolyamat</h2>
+
+                <h3>Launcher működése</h3>
+                <ol>
+                    <li><strong>Argumentum parsing</strong>: Feldolgozza a parancssori argumentumokat</li>
+                    <li><strong>Akció meghatározás</strong>: Eldönti, melyik műveletet kell végrehajtani</li>
+                    <li><strong>Végrehajtás</strong>: Futtatja a megfelelő modult</li>
+                    <li><strong>Eredmény jelentés</strong>: Visszajelzés a művelet sikeréről/kudarcáról</li>
+                </ol>
+
+                <h3>CLA Launch folyamat</h3>
+                <div class="code-block">
+                    <pre>1. Váltás a <span class="code-string">cla/</span> könyvtárba
+2. Flask app indítása (<span class="code-string">app.py</span>)
+3. Web interface elérhetővé válik
+4. Ctrl+C leállítja az alkalmazást</pre>
+                </div>
+
+                <h3>Teljes frissítés folyamat</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">STEP 1: Log Importer</span>
+- Szegmentált log fájlok beolvasása
+- Adatbázisba importálás
+- Duplikátum ellenőrzés
+
+<span class="code-keyword">STEP 2: Database Update</span>
+- Piaci adatok letöltése Binance API-ról
+- Adatok feldolgozása
+- Adatbázis frissítése
+
+<span class="code-keyword">RESULT:</span>
+✅ Teljes frissítés sikeres!</pre>
+                </div>
+            </section>
+
+            <section id="error-handling">
+                <h2>Hibakezelés</h2>
+
+                <h3>Gyakori hibák</h3>
+                <ul>
+                    <li><strong>CLA launch hiba</strong>: Ellenőrizd, hogy a <code>cla/app.py</code> létezik</li>
+                    <li><strong>Import hiba</strong>: Győződj meg róla, hogy a log könyvtár létezik</li>
+                    <li><strong>Database hiba</strong>: Ellenőrizd az adatbázis kapcsolatot</li>
+                    <li><strong>Module not found</strong>: Telepítsd a szükséges függőségeket</li>
+                </ul>
+
+                <h3>Debug módok</h3>
+                <p>Minden modul részletes hibaüzeneteket ad vissza:</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">❌ Error launching CLA:</span> <span class="code-string">[részletes hibaüzenet]</span>
+<span class="code-keyword">❌ Error running log importer:</span> <span class="code-string">[részletes hibaüzenet]</span>
+<span class="code-keyword">❌ Error running database update:</span> <span class="code-string">[részletes hibaüzenet]</span></pre>
+                </div>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#overview">Áttekintés</a></li>
+                <li><a href="#actions">Főbb Műveletek</a>
+                    <ul>
+                        <li><a href="#actions">CLA Indítása</a></li>
+                        <li><a href="#actions">Log Importer</a></li>
+                        <li><a href="#actions">Database Update</a></li>
+                        <li><a href="#actions">Teljes Frissítés</a></li>
+                    </ul>
+                </li>
+                <li><a href="#examples">Példák</a></li>
+                <li><a href="#workflow">Munkafolyamat</a></li>
+                <li><a href="#error-handling">Hibakezelés</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- Search index -->
+    <script src="../search-index.js"></script>
+    <!-- Search functionality -->
+    <script src="../search.js"></script>
+    <!-- Main script -->
+    <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trend Monitor - Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html" class="active">Bot</a></li>
+            <li><a href="alapfogalmak.html">Alapok</a></li>
+            <li><a href="chris.html">Chris</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Bot</h3>
+            <ul>
+                <li><a href="bothasznalat.html"><i class="fas fa-rocket"></i> Bot Használat</a></li>
+                <li><a href="launcher.html"><i class="fas fa-play-circle"></i> Launcher</a></li>
+                <li><a href="trend_monitor.html" class="active"><i class="fas fa-chart-area"></i> Trend Monitor</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Trend Monitor</h1>
+            
+            <p>Egyszerű trend monitoring eszköz, amely periodikusan futtatja a <code>trend/main.py</code> scriptet és megjeleníti a <code>trend_data.json</code> tartalmát.</p>
+
+            <section id="overview">
+                <h2>Áttekintés</h2>
+                
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> trend_monitor.py <span class="code-string">[INTERVAL_SECONDS]</span>
+
+<span class="code-keyword"># Alapértelmezett intervallum:</span> <span class="code-value">30</span> másodperc</pre>
+                </div>
+
+                <h3>Főbb funkciók</h3>
+                <ul class="feature-list">
+                    <li>Periodikus trend analízis futtatása</li>
+                    <li>Trend adatok betöltése és megjelenítése</li>
+                    <li>Végrehajtási idő mérése</li>
+                    <li>Sikeres futtatások statisztikája</li>
+                    <li>Timeout védelem (2 perc)</li>
+                </ul>
+            </section>
+
+            <section id="usage">
+                <h2>Használat</h2>
+
+                <h3>Alapvető futtatás</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> trend_monitor.py</pre>
+                </div>
+                <p>30 másodperces intervallummal fut (alapértelmezett).</p>
+
+                <h3>Egyedi intervallum</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> trend_monitor.py <span class="code-value">60</span>  <span class="code-keyword"># 60 másodperc</span>
+<span class="code-keyword">python</span> trend_monitor.py <span class="code-value">120</span> <span class="code-keyword"># 2 perc</span></pre>
+                </div>
+
+                <h3>Egyszeri futtatás</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">python</span> trend_monitor.py <span class="code-value">0</span>  <span class="code-keyword"># Egyszer fut, majd kilép</span></pre>
+                </div>
+            </section>
+
+            <section id="workflow">
+                <h2>Munkafolyamat</h2>
+
+                <h3>1. Trend Analízis Futtatása</h3>
+                <p>A monitor meghívja a <code>trend/main.py</code> scriptet:</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">subprocess.run</span>([
+    sys.executable, 
+    <span class="code-string">"trend/main.py"</span>, 
+    <span class="code-string">"--quiet"</span>
+], timeout=<span class="code-value">120</span>)</pre>
+                </div>
+
+                <ul>
+                    <li><strong>Timeout</strong>: 2 perc (120 másodperc)</li>
+                    <li><strong>Quiet mode</strong>: Csökkentett kimenet</li>
+                    <li><strong>Végrehajtási idő</strong>: Mérve és megjelenítve</li>
+                </ul>
+
+                <h3>2. Trend Adatok Betöltése</h3>
+                <p>Betölti a <code>trend/trend_data.json</code> fájlt:</p>
+                <div class="code-block">
+                    <pre>{
+  <span class="code-property">"timestamp_utc"</span>: <span class="code-string">"2025-10-01T00:00:00Z"</span>,
+  <span class="code-property">"breadth_up_pct_1h_top20_alt"</span>: <span class="code-value">0.650000000000</span>,
+  <span class="code-property">"breadth_up_pct_4h_top20_alt"</span>: <span class="code-value">0.550000000000</span>,
+  <span class="code-property">"btc_trend_dir_1h"</span>: <span class="code-string">"LONG"</span>,
+  <span class="code-property">"btc_trend_dir_4h"</span>: <span class="code-string">"LONG"</span>,
+  <span class="code-property">"eth_trend_dir_1h"</span>: <span class="code-string">"LONG"</span>,
+  <span class="code-property">"corr_to_btc_1h"</span>: <span class="code-value">0.850000000000</span>
+}</pre>
+                </div>
+
+                <h3>3. Adatok Megjelenítése</h3>
+                <p>Tiszta formátumban jeleníti meg az indikátorokat:</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Execution time:</span> <span class="code-value">3.45</span> seconds
+<span class="code-keyword">------------------------------------------------------------</span>
+timestamp_utc: 2025-10-01T00:00:00Z
+breadth_up_pct_1h_top20_alt: 0.650000000000
+btc_trend_dir_1h: LONG
+btc_trend_dir_4h: LONG
+...</pre>
+                </div>
+            </section>
+
+            <section id="output">
+                <h2>Kimenet Formátum</h2>
+
+                <h3>Indítási információk</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">============================================================</span>
+<span class="code-keyword">TREND MONITOR</span>
+<span class="code-keyword">============================================================</span>
+Interval: <span class="code-value">30</span> seconds
+Start time: <span class="code-string">2025-10-01 00:00:00</span>
+Press Ctrl+C to stop</pre>
+                </div>
+
+                <h3>Ciklus információk</h3>
+                <div class="code-block">
+                    <pre>Cycle #<span class="code-value">1</span> - <span class="code-string">00:00:00</span>
+Execution time: <span class="code-value">3.45</span> seconds
+<span class="code-keyword">------------------------------------------------------------</span>
+[trend adatok...]
+
+Success rate: <span class="code-value">1/1</span> (<span class="code-value">100.0%</span>)
+Waiting <span class="code-value">30</span> seconds...</pre>
+                </div>
+
+                <h3>Leállítási statisztika</h3>
+                <div class="code-block">
+                    <pre>Monitoring stopped
+Final stats: <span class="code-value">45/50</span> successful cycles</pre>
+                </div>
+            </section>
+
+            <section id="error-handling">
+                <h2>Hibakezelés</h2>
+
+                <h3>Timeout hiba</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">ERROR:</span> Trend analysis timed out after 2 minutes</pre>
+                </div>
+                <p>Ha a trend analízis 2 percnél tovább tart, a monitor megszakítja.</p>
+
+                <h3>Return code hiba</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">ERROR:</span> Trend analysis failed with return code <span class="code-value">1</span>
+Error output: [stderr kimenet]</pre>
+                </div>
+                <p>Ha a trend script hibával tér vissza, a monitor megjeleníti a hibaüzenetet.</p>
+
+                <h3>Fájl nem található</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">ERROR:</span> trend/trend_data.json not found</pre>
+                </div>
+                <p>Ha a trend adatok fájl nem létezik, a monitor jelzi.</p>
+
+                <h3>Előfeltételek ellenőrzése</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">ERROR:</span> trend/main.py not found. 
+Make sure you're running from the project root.</pre>
+                </div>
+                <p>A monitor ellenőrzi, hogy a <code>trend/main.py</code> létezik-e indítás előtt.</p>
+            </section>
+
+            <section id="statistics">
+                <h2>Statisztikák</h2>
+
+                <h3>Sikeres futtatások követése</h3>
+                <p>A monitor minden ciklus után megjeleníti:</p>
+                <ul class="feature-list">
+                    <li>Ciklus szám</li>
+                    <li>Sikeres futtatások száma</li>
+                    <li>Sikeres arány százalékban</li>
+                    <li>Végrehajtási idő másodpercben</li>
+                </ul>
+
+                <h3>Példa kimenet</h3>
+                <div class="code-block">
+                    <pre>Cycle #<span class="code-value">10</span> - <span class="code-string">00:05:00</span>
+Execution time: <span class="code-value">2.87</span> seconds
+[trend adatok...]
+
+Success rate: <span class="code-value">9/10</span> (<span class="code-value">90.0%</span>)</pre>
+                </div>
+            </section>
+
+            <section id="integration">
+                <h2>Integráció</h2>
+
+                <h3>Trend Main Script</h3>
+                <p>A monitor a <code>trend/main.py</code> scriptet hívja, amely:</p>
+                <ul>
+                    <li>Generálja a 9 piaci indikátort</li>
+                    <li>Binance API-t használ adatokhoz</li>
+                    <li>UTC időzónát használ</li>
+                    <li>Csak zárt gyertyákkal dolgozik</li>
+                    <li>Eredményt <code>trend_data.json</code>-ba menti</li>
+                </ul>
+
+                <h3>Használat más scriptekkel</h3>
+                <p>A trend monitor kimenetét más scriptek is használhatják:</p>
+                <div class="code-block">
+                    <pre><span class="code-keyword">import</span> json
+
+<span class="code-keyword">with</span> open(<span class="code-string">"trend/trend_data.json"</span>) <span class="code-keyword">as</span> f:
+    trend_data = json.load(f)
+    
+<span class="code-keyword">print</span>(trend_data[<span class="code-string">"btc_trend_dir_1h"</span>])</pre>
+                </div>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#overview">Áttekintés</a></li>
+                <li><a href="#usage">Használat</a></li>
+                <li><a href="#workflow">Munkafolyamat</a></li>
+                <li><a href="#output">Kimenet</a></li>
+                <li><a href="#error-handling">Hibakezelés</a></li>
+                <li><a href="#statistics">Statisztikák</a></li>
+                <li><a href="#integration">Integráció</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- Search index -->
+    <script src="../search-index.js"></script>
+    <!-- Search functionality -->
+    <script src="../search.js"></script>
+    <!-- Main script -->
+    <script src="../script.js"></script>
+</body>
+</html>
