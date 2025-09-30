@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alapok - Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="index.html">Kezdőlap</a></li>
+            <li><a href="api.html">Bot Használat</a></li>
+            <li><a href="alapok.html" class="active">Alapok</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Alapfogalmak</h3>
+            <ul>
+                <li><a href="#ltf-htf" class="active"><i class="fas fa-chart-line"></i> LTF és HTF</a></li>
+                <li><a href="#timeframes"><i class="fas fa-clock"></i> Timeframe-ek</a></li>
+                <li><a href="#guardrails"><i class="fas fa-shield-alt"></i> Guardrails</a></li>
+                <li><a href="#vwap"><i class="fas fa-wave-square"></i> VWAP</a></li>
+                <li><a href="#confluence"><i class="fas fa-check-double"></i> Confluence Score</a></li>
+                <li><a href="#market-context"><i class="fas fa-globe"></i> Market Context</a></li>
+                <li><a href="#risk-management"><i class="fas fa-balance-scale"></i> Risk Management</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Alapfogalmak</h1>
+            
+            <p>A Trading Bot AI-alapú döntéshozó rendszer, amely scalp és intraday kereskedési stratégiákat hajt végre Binance USDT-M Futures piacon. Az alábbiakban megtalálod a legfontosabb fogalmakat és koncepciókat.</p>
+
+            <section id="ltf-htf">
+                <h2>LTF és HTF (Low/High Time Frame)</h2>
+                <p><strong>LTF (Low Time Frame)</strong>: Alacsony időkeretek (1m, 5m, 15m), amelyek az elsődleges döntési alapot képezik. A momentum és piaci struktúra elemzése ezen történik.</p>
+                <p><strong>HTF (High Time Frame)</strong>: Magas időkeretek (1h, 4h), amelyek csak szűrőként és megerősítésként szolgálnak. Nem írhatják felül az erős LTF jelzéseket.</p>
+                
+                <div class="version-badge">Precedencia: LTF > HTF</div>
+                
+                <ul class="feature-list">
+                    <li>5m és 15m a legerősebb súllyal bírnak az LTF-ek között</li>
+                    <li>1m finomítja a belépési pontokat</li>
+                    <li>HTF csak akkor blokkol trade-et, ha egyértelmű ellentmondás van</li>
+                </ul>
+            </section>
+
+            <section id="timeframes">
+                <h2>Timeframe Data Windows</h2>
+                <p>A rendszer mindig gyertyaszelet-alapú (slice-based) elemzést végez, soha nem egyetlen gyertyát néz:</p>
+                
+                <div class="code-block">
+                    <pre><span class="code-property">1m</span>:  <span class="code-value">20-50</span> gyertya (utolsó N darab)
+<span class="code-property">5m</span>:  <span class="code-value">40-60</span> gyertya (opcionálisan 100-ig)
+<span class="code-property">15m</span>: <span class="code-value">20-30</span> gyertya
+<span class="code-property">1h</span>:  <span class="code-value">20</span> gyertya
+<span class="code-property">4h</span>:  <span class="code-value">10-15</span> gyertya</pre>
+                </div>
+
+                <p>A payload mindig tartalmazza a pontos felhasznált gyertyaszámot minden timeframe-hez.</p>
+            </section>
+
+            <section id="guardrails">
+                <h2>Hard Guardrails</h2>
+                <p>Kötelező feltételek, amelyeknek mind teljesülniük kell. Ha bármelyik sikertelen → <code>WAIT</code> akció.</p>
+
+                <h3>Guardrail feltételek:</h3>
+                <ul>
+                    <li><code>atr_pct.1m ≥ 0.12</code> - Minimális volatilitás követelmény</li>
+                    <li><code>Vol_Ratio(5m) ≥ 0.25</code> - Volumen arány küszöb</li>
+                    <li><code>spread_bps ≤ 0.30</code> - Maximum spread bázispontban</li>
+                    <li><code>data_freshness_ok == true</code> - Adat frissesség ellenőrzés</li>
+                    <li>Orderbook imbalance <strong>önmagában sosem</strong> indít trade-et</li>
+                </ul>
+
+                <div class="code-block">
+                    <pre><span class="code-keyword">Ha bármelyik guardrail fail:</span>
+{
+  <span class="code-property">"action"</span>: <span class="code-string">"WAIT"</span>,
+  <span class="code-property">"comment"</span>: <span class="code-string">"Guardrail failed: [reason]"</span>
+}</pre>
+                </div>
+            </section>
+
+            <section id="vwap">
+                <h2>VWAP (Volume Weighted Average Price)</h2>
+                <p>A VWAP egy volumen-súlyozott átlagár, amely kulcsfontosságú támasz/ellenállás szintként működik intraday kereskedésben.</p>
+
+                <h3>VWAP szerepe:</h3>
+                <ul class="feature-list">
+                    <li><strong>VWAP Retest</strong>: Amikor az ár visszatér a VWAP-hoz és visszapattan róla</li>
+                    <li><strong>VWAP Relation</strong>: Ár pozíciója a VWAP-hoz képest (above/below)</li>
+                    <li><strong>VWAP Distance</strong>: Távolság bázispontban (ideális retest: ≤8 bps)</li>
+                </ul>
+
+                <p>VWAP retest erős megerősítés lehet counter-trend scalp esetén, amikor HTF és LTF nem egyezik.</p>
+
+                <div class="code-block">
+                    <pre><span class="code-property">vwap_retest_up</span>: <span class="code-value">true</span>  <span class="code-keyword">// LONG irányú retest</span>
+<span class="code-property">vwap_retest_down</span>: <span class="code-value">true</span>  <span class="code-keyword">// SHORT irányú retest</span>
+<span class="code-property">vwap_distance_bps</span>: <span class="code-value">5.2</span>  <span class="code-keyword">// Távolság bázispontban</span></pre>
+                </div>
+            </section>
+
+            <section id="confluence">
+                <h2>Confluence Scoring (0-5)</h2>
+                <p>A confluence score egy 0-5 skálán méri a különböző jelek összehangoltságát. <strong>Minimum 3 pont szükséges</strong> trade nyitásához.</p>
+
+                <h3>Pontozási rendszer:</h3>
+                <div class="code-block">
+                    <pre><span class="code-value">+2</span> <span class="code-keyword">LTF structure alignment</span>
+   (5m/15m egyetért, 1m nem mond ellent)
+
+<span class="code-value">+1</span> <span class="code-keyword">VWAP support</span>
+   (vwap_relation kedvező VAGY correct retest)
+
+<span class="code-value">+1</span> <span class="code-keyword">Momentum</span>
+   (ema_stack, macd_shift, stoch_rsi_cross, pullback)
+
+<span class="code-value">+1</span> <span class="code-keyword">Market microstructure</span>
+   (orderbook imbalance |l10| ≥ 55 megfelelő irányban)
+
+<span class="code-value">-1</span> <span class="code-keyword">Vol_Ratio penalty</span>
+   (ha Vol_Ratio(5m) < 0.25)</pre>
+                </div>
+
+                <p>Példa: Ha LTF align (+2), VWAP retest (+1), és momentum (+1) = 4 pont → Trade mehet!</p>
+            </section>
+
+            <section id="market-context">
+                <h2>Global Market Context</h2>
+                <p>A globális piaci környezet opcionális boost-okat ad, maximum +2 pontot összesen.</p>
+
+                <h3>Market Context elemek:</h3>
+                <ul>
+                    <li><strong>BTC/ETH Trend</strong>: +1 ha mindkét 1h trend egyezik a trade irányával</li>
+                    <li><strong>Breadth</strong>: +1 ha top20 alt breadth támogatja
+                        <ul>
+                            <li>LONG: breadth_up_pct_1h ≥ 60</li>
+                            <li>SHORT: breadth_up_pct_1h ≤ 40</li>
+                        </ul>
+                    </li>
+                    <li><strong>Breadth ellentmondás</strong>: -1 ha erősen ellentmond (LONG: ≤45, SHORT: ≥55)</li>
+                </ul>
+
+                <h3>BTC korreláció gate:</h3>
+                <p>Ha <code>corr_to_btc_1h ≥ 0.7</code> és BTC 5m microtrend ellentétes, és nincs valid VWAP retest → <code>WAIT</code></p>
+            </section>
+
+            <section id="risk-management">
+                <h2>Risk Management & Execution</h2>
+                <p>A kockázatkezelés és végrehajtási szabályok biztosítják a fenntartható kereskedést.</p>
+
+                <h3>Risk/Reward követelmények:</h3>
+                <div class="code-block">
+                    <pre><span class="code-property">expected_rr_after_fees</span> ≥ <span class="code-value">1.4</span>  <span class="code-keyword">// Általános minimum</span>
+<span class="code-property">expected_rr_after_fees</span> ≥ <span class="code-value">1.1</span>  <span class="code-keyword">// SCALP HTF aligned esetén</span>
+
+<span class="code-keyword">Fee proxy:</span>
+expected_total_profit ≥ 2.5 × (taker + maker + slippage)</pre>
+                </div>
+
+                <h3>Trade típusok:</h3>
+                <ul>
+                    <li><strong>SCALP</strong>: max 15 perc tartás, time_stop 5-7 perc</li>
+                    <li><strong>INTRADAY</strong>: max 90 perc tartás, time_stop 20-30 perc</li>
+                </ul>
+
+                <h3>TP/SL szabályok (Local Zone M3-M15):</h3>
+                <ul class="feature-list">
+                    <li>Alapértelmezett timeframe: 5m (váltható 3m/15m-re)</li>
+                    <li>Local zone: utolsó ~40-60 gyertya high/low alapján</li>
+                    <li>TP és SL <strong>mindig a zónán belül</strong> (kivéve valid breakout)</li>
+                    <li>Ha a zóna túl szűk a fee-k fedezésére → WAIT</li>
+                </ul>
+
+                <h3>Order típusok:</h3>
+                <ul>
+                    <li><code>MARKET</code>: momentum és retest esetén</li>
+                    <li><code>LIMIT</code>: ha likviditás és spread engedi</li>
+                </ul>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#ltf-htf">LTF és HTF</a></li>
+                <li><a href="#timeframes">Timeframe-ek</a></li>
+                <li><a href="#guardrails">Guardrails</a></li>
+                <li><a href="#vwap">VWAP</a></li>
+                <li><a href="#confluence">Confluence Score</a></li>
+                <li><a href="#market-context">Market Context</a></li>
+                <li><a href="#risk-management">Risk Management</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

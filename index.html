@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="index.html" class="active">Kezdőlap</a></li>
+            <li><a href="api.html">Bot Használat</a></li>
+            <li><a href="alapok.html">Alapok</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Dokumentáció</h3>
+            <ul>
+                <li><a href="#bevezetes" class="active"><i class="fas fa-home"></i> Bevezetés</a></li>
+                <li><a href="#telepites"><i class="fas fa-download"></i> Telepítés</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Üdvözöl a Trading Bot Dokumentáció</h1>
+            
+            <section id="bevezetes">
+                <h2>Bevezetés</h2>
+                <p>Ez egy automatizált trading bot rendszer dokumentációja, amely AI-alapú döntéshozatalt használ a cryptocurrency kereskedéshez.</p>
+                
+                <div class="version-badge">v1.0.0</div>
+
+                <h3>Főbb funkciók</h3>
+                <ul class="feature-list">
+                    <li>AI-alapú kereskedési döntések</li>
+                    <li>Automatikus pozíció nyitás és zárás</li>
+                    <li>Take Profit és Stop Loss kezelés</li>
+                    <li>Valós idejű monitoring dashboard</li>
+                    <li>Részletes logging és analytics</li>
+                </ul>
+            </section>
+
+            <section id="telepites">
+                <h2>Telepítés</h2>
+                <p>A rendszer telepítéséhez kövesd az alábbi lépéseket:</p>
+
+                <h3>Előfeltételek</h3>
+                <div class="code-block">
+                    <pre>Python 3.8+
+pip
+Binance API kulcsok</pre>
+                </div>
+
+                <h3>Telepítési lépések</h3>
+                <ol>
+                    <li>Klónozd a repository-t</li>
+                    <li>Telepítsd a függőségeket: <code>pip install -r requirements.txt</code></li>
+                    <li>Konfiguráld az API kulcsokat</li>
+                    <li>Indítsd el a dashboard-ot: <code>python cla/app.py</code></li>
+                </ol>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#bevezetes">Bevezetés</a></li>
+                <li><a href="#telepites">Telepítés</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

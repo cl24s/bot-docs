@@ -1,0 +1,377 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #1e2227;
+    color: #d4d4d4;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background-color: #2d3238;
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3a3f47;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #1e2227;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid #3a3f47;
+}
+
+.search-box input {
+    background: none;
+    border: none;
+    color: #d4d4d4;
+    outline: none;
+    width: 200px;
+}
+
+.repo-info {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* Navigation */
+nav {
+    background-color: #2d3238;
+    padding: 0.8rem 2rem;
+    border-bottom: 1px solid #3a3f47;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+nav a {
+    color: #a0a0a0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+nav a:hover, nav a.active {
+    color: #64b5f6;
+}
+
+/* Main Layout */
+.container {
+    display: flex;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background-color: #252a30;
+    padding: 2rem 1.5rem;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    border-right: 1px solid #3a3f47;
+}
+
+.sidebar h3 {
+    color: #888;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    margin-bottom: 0.3rem;
+}
+
+.sidebar a {
+    color: #a0a0a0;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.sidebar a:hover {
+    background-color: #2d3238;
+    color: #64b5f6;
+}
+
+.sidebar a.active {
+    background-color: #1e4d7a;
+    color: #64b5f6;
+}
+
+.sidebar i {
+    width: 20px;
+    font-size: 0.9rem;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 3rem 4rem;
+    max-width: 900px;
+}
+
+.main-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    color: #e0e0e0;
+}
+
+.main-content h2 {
+    font-size: 1.8rem;
+    margin: 2.5rem 0 1.5rem;
+    font-weight: 400;
+    color: #e0e0e0;
+}
+
+.main-content h3 {
+    font-size: 1.3rem;
+    margin: 2rem 0 1rem;
+    font-weight: 400;
+    color: #e0e0e0;
+}
+
+.main-content p {
+    margin-bottom: 1.2rem;
+    color: #b8b8b8;
+}
+
+.main-content a {
+    color: #64b5f6;
+    text-decoration: none;
+}
+
+.main-content a:hover {
+    text-decoration: underline;
+}
+
+.main-content code {
+    background-color: #1a1d23;
+    color: #d4d4d4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.main-content ol, .main-content ul:not(.feature-list) {
+    margin-left: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.main-content li {
+    margin-bottom: 0.5rem;
+    color: #b8b8b8;
+}
+
+.version-badge {
+    display: inline-block;
+    background-color: #1e4d7a;
+    color: #64b5f6;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+/* Code Block */
+.code-block {
+    background-color: #1a1d23;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+    border: 1px solid #2d3238;
+}
+
+.code-block pre {
+    color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow-x: auto;
+}
+
+.code-keyword { color: #c586c0; }
+.code-string { color: #ce9178; }
+.code-property { color: #9cdcfe; }
+.code-value { color: #b5cea8; }
+
+/* Feature List */
+.feature-list {
+    list-style: none;
+    margin: 1.5rem 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-left: 0;
+}
+
+.feature-list li::before {
+    content: "✓";
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 1.2rem;
+    min-width: 20px;
+}
+
+.feature-list em {
+    color: #888;
+}
+
+/* API Endpoint Styles */
+.api-endpoint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.api-method {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.2rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: white;
+}
+
+.api-method.get {
+    background-color: #61affe;
+}
+
+.api-method.post {
+    background-color: #49cc90;
+}
+
+.api-method.put {
+    background-color: #fca130;
+}
+
+.api-method.delete {
+    background-color: #f93e3e;
+}
+
+.api-endpoint code {
+    font-size: 1rem;
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Right Sidebar (TOC) */
+.toc {
+    width: 250px;
+    padding: 3rem 2rem;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    border-left: 1px solid #3a3f47;
+}
+
+.toc h4 {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.toc ul {
+    list-style: none;
+}
+
+.toc li {
+    margin-bottom: 0.5rem;
+}
+
+.toc a {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+}
+
+.toc a:hover {
+    color: #64b5f6;
+}
+
+.toc ul ul {
+    margin-left: 1rem;
+    margin-top: 0.3rem;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e2227;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3a3f47;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4a4f57;
+}
