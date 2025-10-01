@@ -1,0 +1,34 @@
+Momentum figyelés scalpban = order flow + volume jelek
+1. Volume csökkenése
+
+Ha longban vagy, és az ár szépen indult felfelé, de a volume gyertyánként csökken → azt jelenti, hogy a vevők kifulladnak.
+
+Ez sokszor előjele annak, hogy nem éri el a TP-t, hanem besül a mozgás → ilyenkor érdemes közelebb hozni a TP-t vagy részben zárni.
+
+👉 Példa: breakout long után a következő 3 gyertya zöld, de minden gyertya alatt kisebb volume → valószínű „fake breakout” / kifulladás.
+
+2. OB (Order Book) elnyeli a trendet
+
+Ha látod, hogy felfelé mész longgal, de 5–10 tickkel feljebb vastag eladói fal ül order bookban (pl. 5M USDT sell wall), és nem fogy → ez azt jelzi, hogy a trendet „fékeli” valaki.
+
+Ha többször nekimegy, de nem tudja átütni, sokszor innen lefordul → érdemes előbb zárni vagy közelebb húzni a TP-t.
+
+👉 Ez scalpban tipikus: price elindul → elér egy nagy sell wallt → odáig elmegy, de ott megáll = profit-taking hely.
+
+3. Agresszív ellenirányú market order
+
+Ha longolsz, és hirtelen jön egy nagy piaci eladási hullám (piros footprint bar, vagy order bookban „market sell sweep”), az azt mutatja, hogy shortosok erőből lépnek be.
+
+Ha ezt többször látod egymás után, az jelzi, hogy elfordulhat az ár.
+
+Ilyenkor nem érdemes a távoli TP-re várni → vagy zársz részben, vagy teljesen.
+
+🔑 Röviden scalpban:
+
+Volume csökken → momentum gyengül → exit közelebb.
+
+Order book fal megfogja az árat → TP-t oda tenni, nem tovább.
+
+Ellenirányú agresszív market order → sokszor fordulás → gyors exit.
+
+Ezért mondják, hogy scalpban a TP nem fix mint swingben, hanem dinamikusan kell kezelned a momentum alapján.

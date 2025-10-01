@@ -168,5 +168,96 @@ const searchIndex = [
         url: 'subpages/chris.html#szabalyok',
         category: 'Chris',
         content: 'order book snapshot imbalance topN bids asks fal likviditás DOM depth of market'
+    },
+    {
+        id: 'ai-engine',
+        title: 'AI Engine Összehasonlítás',
+        url: 'subpages/ai_engine.html',
+        category: 'Bot',
+        content: 'AI modellek GPT-5 GPT-5-mini Claude Sonnet 4.5 GPT-4o Gemini teljesítmény összehasonlítás reasoning JSON schema compliance költség performance trade-off prompt optimalizáció guardrail validation confluence scoring fee-aware RR calculation nested conditionals'
+    },
+    {
+        id: 'ai-engine-gpt5',
+        title: 'AI Engine - GPT-5',
+        url: 'subpages/ai_engine.html#models',
+        category: 'Bot',
+        content: 'GPT-5 full model superior reasoning multi-step logic matematikai precizitás JSON output context management 95/100 score drága lassabb'
+    },
+    {
+        id: 'ai-engine-gpt5mini',
+        title: 'AI Engine - GPT-5-mini',
+        url: 'subpages/ai_engine.html#models',
+        category: 'Bot',
+        content: 'GPT-5-mini jelenleg használt kiváló reasoning olcsóbb gyorsabb 88/100 score variance consistency'
+    },
+    {
+        id: 'ai-engine-claude',
+        title: 'AI Engine - Claude Sonnet 4.5',
+        url: 'subpages/ai_engine.html#models',
+        category: 'Bot',
+        content: 'Claude Sonnet 4.5 legjobb ár érték arány szabálykövetés structured output 92/100 score upgrade ajánlott'
+    },
+    {
+        id: 'ai-engine-recommendation',
+        title: 'AI Engine - Végső Ajánlás',
+        url: 'subpages/ai_engine.html#recommendation',
+        category: 'Bot',
+        content: 'upgrade Claude Sonnet 4.5 GPT-5-mini összehasonlítás költség teljesítmény trade-off production trading bot 20000 jobb döntés azonos költség'
+    },
+    {
+        id: 'tozsde-nyitvatartas',
+        title: 'Tőzsdék Nyitvatartása',
+        url: 'subpages/tozsde_nyitvatartas.html',
+        category: 'Alapok',
+        content: 'tőzsdék nyitvatartása magyar idő NYSE NASDAQ CME LSE Frankfurt DAX Euronext Tokyo Hong Kong Shanghai India ASX forex crypto kereskedési szekciók London New York átfedés likviditás volatilitás nyári téli időszámítás'
+    },
+    {
+        id: 'tozsde-americas',
+        title: 'Tőzsdék - Amerikai Piacok',
+        url: 'subpages/tozsde_nyitvatartas.html#americas',
+        category: 'Alapok',
+        content: 'NYSE New York Stock Exchange NASDAQ CME Chicago 15:30 22:00 Dow Jones S&P 500 tech részvények határidős opciós'
+    },
+    {
+        id: 'tozsde-europe',
+        title: 'Tőzsdék - Európai Piacok',
+        url: 'subpages/tozsde_nyitvatartas.html#europe',
+        category: 'Alapok',
+        content: 'LSE London Frankfurt DAX Euronext Párizs Amszterdam Zürich Madrid Milánó FTSE CAC IBEX 09:00 17:30'
+    },
+    {
+        id: 'tozsde-asia',
+        title: 'Tőzsdék - Ázsiai Piacok',
+        url: 'subpages/tozsde_nyitvatartas.html#asia-pacific',
+        category: 'Alapok',
+        content: 'Tokyo TSE Nikkei Hong Kong HKEX Shanghai SSE Shenzhen Mumbai NSE Sydney ASX ebédszünet ázsiai kereskedés'
+    },
+    {
+        id: 'momentum',
+        title: 'Momentum Figyelés',
+        url: 'subpages/momentum.html',
+        category: 'Chris',
+        content: 'momentum figyelés scalp order flow volume jelek csökkenés kifulladás order book fal ellenállás agresszív market order footprint dinamikus TP exit stratégia'
+    },
+    {
+        id: 'momentum-volume',
+        title: 'Momentum - Volume Csökkenése',
+        url: 'subpages/momentum.html#volume-decrease',
+        category: 'Chris',
+        content: 'volume csökkenés gyertyánként vevők kifulladnak fake breakout TP közelebb részben zárni gyengülő momentum'
+    },
+    {
+        id: 'momentum-orderbook',
+        title: 'Momentum - Order Book Fal',
+        url: 'subpages/momentum.html#order-book',
+        category: 'Chris',
+        content: 'order book vastag fal eladói vételi sell wall buy wall ellenállás támasz whale manipulation TP elé tenni'
+    },
+    {
+        id: 'momentum-aggressive',
+        title: 'Momentum - Agresszív Market Orders',
+        url: 'subpages/momentum.html#aggressive-orders',
+        category: 'Chris',
+        content: 'agresszív market order footprint piros sell sweep shortosok fordulás gyors exit momentum megfordult'
     }
 ];

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tőzsdék Nyitvatartása - Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html">Bot</a></li>
+            <li><a href="alapfogalmak.html" class="active">Alapok</a></li>
+            <li><a href="chris.html">Chris</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Alapok</h3>
+            <ul>
+                <li><a href="alapfogalmak.html"><i class="fas fa-book"></i> Alapfogalmak</a></li>
+                <li><a href="tozsde_nyitvatartas.html" class="active"><i class="fas fa-clock"></i> Tőzsdék Nyitvatartása</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Tőzsdék Nyitvatartása</h1>
+            
+            <p>A legfontosabb világ nagy tőzsdéinek nyitvatartása <strong>magyar idő (CET/CEST)</strong> szerint:</p>
+
+            <section id="americas">
+                <h2>🇺🇸 Amerikai Tőzsdék</h2>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                    <thead>
+                        <tr style="background: #252a30; border-bottom: 2px solid #3a3f47;">
+                            <th style="padding: 0.75rem; text-align: left;">Tőzsde</th>
+                            <th style="padding: 0.75rem; text-align: left;">Város</th>
+                            <th style="padding: 0.75rem; text-align: center;">Nyitás</th>
+                            <th style="padding: 0.75rem; text-align: center;">Zárás</th>
+                            <th style="padding: 0.75rem; text-align: left;">Megjegyzés</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>NYSE</strong></td>
+                            <td style="padding: 0.75rem;">New York</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">15:30</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">22:00</span></td>
+                            <td style="padding: 0.75rem;">Dow Jones, S&P 500</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>NASDAQ</strong></td>
+                            <td style="padding: 0.75rem;">New York</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">15:30</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">22:00</span></td>
+                            <td style="padding: 0.75rem;">Tech részvények fő piaca</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem;"><strong>CME</strong></td>
+                            <td style="padding: 0.75rem;">Chicago</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">00:00 / 23:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">23:00 / 22:00</span></td>
+                            <td style="padding: 0.75rem;">Határidős, opciós piac, szinte 24/5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="europe">
+                <h2>🇪🇺 Európai Tőzsdék</h2>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                    <thead>
+                        <tr style="background: #252a30; border-bottom: 2px solid #3a3f47;">
+                            <th style="padding: 0.75rem; text-align: left;">Tőzsde</th>
+                            <th style="padding: 0.75rem; text-align: left;">Város / Régió</th>
+                            <th style="padding: 0.75rem; text-align: center;">Nyitás</th>
+                            <th style="padding: 0.75rem; text-align: center;">Zárás</th>
+                            <th style="padding: 0.75rem; text-align: left;">Index</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>LSE</strong></td>
+                            <td style="padding: 0.75rem;">London 🇬🇧</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">17:30</span></td>
+                            <td style="padding: 0.75rem;">FTSE 100</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>Deutsche Börse</strong></td>
+                            <td style="padding: 0.75rem;">Frankfurt 🇩🇪</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">17:30</span></td>
+                            <td style="padding: 0.75rem;">DAX</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>Euronext</strong></td>
+                            <td style="padding: 0.75rem;">Párizs, Amszterdam, Brüsszel 🇫🇷🇳🇱🇧🇪</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">17:30</span></td>
+                            <td style="padding: 0.75rem;">CAC 40, AEX</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>SIX Swiss Exchange</strong></td>
+                            <td style="padding: 0.75rem;">Zürich 🇨🇭</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">17:30</span></td>
+                            <td style="padding: 0.75rem;">SMI</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>BME</strong></td>
+                            <td style="padding: 0.75rem;">Madrid 🇪🇸</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">17:30</span></td>
+                            <td style="padding: 0.75rem;">IBEX 35</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem;"><strong>Borsa Italiana</strong></td>
+                            <td style="padding: 0.75rem;">Milánó 🇮🇹</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">17:30</span></td>
+                            <td style="padding: 0.75rem;">FTSE MIB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="asia-pacific">
+                <h2>🌏 Ázsiai és Csendes-óceáni Tőzsdék</h2>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                    <thead>
+                        <tr style="background: #252a30; border-bottom: 2px solid #3a3f47;">
+                            <th style="padding: 0.75rem; text-align: left;">Tőzsde</th>
+                            <th style="padding: 0.75rem; text-align: left;">Város / Ország</th>
+                            <th style="padding: 0.75rem; text-align: center;">Nyitás</th>
+                            <th style="padding: 0.75rem; text-align: center;">Zárás</th>
+                            <th style="padding: 0.75rem; text-align: left;">Megjegyzés</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>TSE</strong></td>
+                            <td style="padding: 0.75rem;">Tokió 🇯🇵</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">02:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">08:00</span></td>
+                            <td style="padding: 0.75rem;">Nikkei 225, ebédszünet: 05:30–06:30</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>HKEX</strong></td>
+                            <td style="padding: 0.75rem;">Hongkong 🇭🇰</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">03:30</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">10:00</span></td>
+                            <td style="padding: 0.75rem;">Ebédszünet: 06:00–07:00</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>SSE</strong></td>
+                            <td style="padding: 0.75rem;">Sanghaj 🇨🇳</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">03:30</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem;">Ebédszünet: 05:30–07:00</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>Shenzhen</strong></td>
+                            <td style="padding: 0.75rem;">Shenzhen 🇨🇳</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">03:30</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00</span></td>
+                            <td style="padding: 0.75rem;">Ebédszünet: 05:30–07:00</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>NSE</strong></td>
+                            <td style="padding: 0.75rem;">Mumbai 🇮🇳</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">04:45</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">11:00</span></td>
+                            <td style="padding: 0.75rem;">NIFTY 50</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem;"><strong>ASX</strong></td>
+                            <td style="padding: 0.75rem;">Sydney 🇦🇺</td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">01:00</span></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">07:00</span></td>
+                            <td style="padding: 0.75rem;">ASX 200</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="important-notes">
+                <h2>⚠️ Fontos Megjegyzések</h2>
+
+                <div class="code-block" style="background: rgba(255, 152, 0, 0.1); border-left: 4px solid #ff9800;">
+                    <h3 style="margin-top: 0;">Nyári és téli időszámítás</h3>
+                    <p>Az amerikai és európai piacok között az óraeltolódás <strong>tavasszal és ősszel változik</strong> a nyári/téli időszámítás miatt.</p>
+                    <ul>
+                        <li>Európa: Március utolsó vasárnapja és október utolsó vasárnapja között CEST (UTC+2)</li>
+                        <li>USA: Március második vasárnapja és november első vasárnapja között EDT (UTC-4)</li>
+                        <li>Az átállások nem egyidőben történnek → 2-3 hétig eltérő óraeltolódás!</li>
+                    </ul>
+                </div>
+
+                <div class="code-block" style="background: rgba(33, 150, 243, 0.1); border-left: 4px solid #2196f3; margin-top: 1.5rem;">
+                    <h3 style="margin-top: 0;">Forex és Kriptó Piacok</h3>
+                    <p>A forex és kriptó piac <strong>24/5 (forex)</strong> vagy <strong>24/7 (crypto)</strong> nyitva van, de a likviditás erősen függ a fenti tőzsdék nyitvatartásától.</p>
+                    <ul class="feature-list">
+                        <li><strong>Forex legnagyobb likviditás:</strong> London (09:00-17:30) és New York (15:30-22:00) átfedés (15:30-17:30)</li>
+                        <li><strong>Kriptó legnagyobb volumen:</strong> Általában amerikai és európai kereskedési órákban</li>
+                        <li><strong>Alacsony likviditás:</strong> Hétvégék és ázsiai éjszaka (európai idő szerint)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="trading-sessions">
+                <h2>📊 Kereskedési Szekciók (Forex/Crypto)</h2>
+
+                <h3>Globális Kereskedési Órák</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                    <thead>
+                        <tr style="background: #252a30; border-bottom: 2px solid #3a3f47;">
+                            <th style="padding: 0.75rem; text-align: left;">Szekció</th>
+                            <th style="padding: 0.75rem; text-align: center;">Időszak (magyar idő)</th>
+                            <th style="padding: 0.75rem; text-align: left;">Jellemzők</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>Ázsiai szekció</strong></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">01:00 - 10:00</span></td>
+                            <td style="padding: 0.75rem;">Alacsonyabb volatilitás, JPY, AUD, NZD aktív</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>Európai szekció</strong></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">09:00 - 17:30</span></td>
+                            <td style="padding: 0.75rem;">Magas likviditás, EUR, GBP, CHF aktív</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #3a3f47;">
+                            <td style="padding: 0.75rem;"><strong>Amerikai szekció</strong></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">15:30 - 22:00</span></td>
+                            <td style="padding: 0.75rem;">Legnagyobb volumen, USD párok, részvények</td>
+                        </tr>
+                        <tr style="background: rgba(76, 175, 80, 0.1);">
+                            <td style="padding: 0.75rem;"><strong>🔥 London-NY átfedés</strong></td>
+                            <td style="padding: 0.75rem; text-align: center;"><span class="version-badge">15:30 - 17:30</span></td>
+                            <td style="padding: 0.75rem;"><strong>Legnagyobb likviditás és volatilitás!</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#americas">Amerikai Tőzsdék</a></li>
+                <li><a href="#europe">Európai Tőzsdék</a></li>
+                <li><a href="#asia-pacific">Ázsiai és Csendes-óceáni</a></li>
+                <li><a href="#important-notes">Fontos Megjegyzések</a></li>
+                <li><a href="#trading-sessions">Kereskedési Szekciók</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- Search index -->
+    <script src="../search-index.js"></script>
+    <!-- Search functionality -->
+    <script src="../search.js"></script>
+    <!-- Main script -->
+    <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momentum Figyelés - Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html">Bot</a></li>
+            <li><a href="alapfogalmak.html">Alapok</a></li>
+            <li><a href="chris.html" class="active">Chris</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Chris</h3>
+            <ul>
+                <li><a href="chris.html"><i class="fas fa-chart-line"></i> Trend Mikró-időzítés</a></li>
+                <li><a href="momentum.html" class="active"><i class="fas fa-tachometer-alt"></i> Momentum Figyelés</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Momentum Figyelés Scalpban</h1>
+            
+            <p><strong>Momentum figyelés scalpban = order flow + volume jelek</strong></p>
+            
+            <p>A scalp kereskedésben a momentum dinamikus változásának felismerése kulcsfontosságú. Az alábbi jelek segítenek eldönteni, hogy érdemes-e tartani a pozíciót vagy inkább korábban kilépni.</p>
+
+            <section id="volume-decrease">
+                <h2>1. Volume Csökkenése</h2>
+                
+                <p>Ha longban vagy, és az ár szépen indult felfelé, de a <strong>volume gyertyánként csökken</strong> → azt jelenti, hogy a vevők kifulladnak.</p>
+
+                <p>Ez sokszor előjele annak, hogy nem éri el a TP-t, hanem besül a mozgás → ilyenkor érdemes <strong>közelebb hozni a TP-t</strong> vagy <strong>részben zárni</strong>.</p>
+
+                <div class="code-block" style="background: rgba(255, 152, 0, 0.1); border-left: 4px solid #ff9800;">
+                    <h3 style="margin-top: 0;">👉 Példa</h3>
+                    <p>Breakout long után a következő 3 gyertya zöld, de minden gyertya alatt kisebb volume → valószínű <strong>„fake breakout"</strong> / kifulladás.</p>
+                </div>
+
+                <h3>Vizuális jel:</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Gyertya 1:</span> Volume: <span class="code-value">1500</span> BTC  ⬆️ Erős vételi nyomás
+<span class="code-keyword">Gyertya 2:</span> Volume: <span class="code-value">1100</span> BTC  ⬆️ Csökkenő vételi erő
+<span class="code-keyword">Gyertya 3:</span> Volume: <span class="code-value">800</span> BTC   ⬆️ Gyenge vételi erő
+<span class="code-keyword">Gyertya 4:</span> Volume: <span class="code-value">500</span> BTC   ⚠️ <strong>Kifulladás!</strong>
+
+<span class="code-keyword">→ Akció:</span> TP közelebb vagy részleges zárás</pre>
+                </div>
+
+                <h3>Miért fontos?</h3>
+                <ul class="feature-list">
+                    <li>Csökkenő volume = csökkenő meggyőződés</li>
+                    <li>A vevők nem hajlandók magasabb áron venni</li>
+                    <li>Valószínű, hogy az ár nem éri el a távoli TP-t</li>
+                    <li>Jobb korábban profitot realizálni, mint visszaadni</li>
+                </ul>
+            </section>
+
+            <section id="order-book">
+                <h2>2. Order Book Elnyeli a Trendet</h2>
+                
+                <p>Ha látod, hogy felfelé mész longgal, de <strong>5–10 tickkel feljebb vastag eladói fal</strong> ül order bookban (pl. 5M USDT sell wall), és nem fogy → ez azt jelzi, hogy a trendet <strong>„fékeli"</strong> valaki.</p>
+
+                <p>Ha többször nekimegy, de nem tudja átütni, sokszor innen lefordul → érdemes <strong>előbb zárni</strong> vagy <strong>közelebb húzni a TP-t</strong>.</p>
+
+                <div class="code-block" style="background: rgba(33, 150, 243, 0.1); border-left: 4px solid #2196f3;">
+                    <h3 style="margin-top: 0;">👉 Scalpban tipikus</h3>
+                    <p>Price elindul → elér egy nagy sell wallt → odáig elmegy, de ott megáll = <strong>profit-taking hely</strong>.</p>
+                </div>
+
+                <h3>Order Book Példa:</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Jelenlegi ár:</span> <span class="code-value">$4,123.50</span>
+
+<span class="code-keyword">Order Book (Asks - Eladók):</span>
+$4,125.00  │  <span class="code-value">150</span> ETH  ← Normál
+$4,125.50  │  <span class="code-value">200</span> ETH  ← Normál
+$4,126.00  │  <span class="code-string">🔴 5,000 ETH</span>  ← <strong>VASTAG FAL!</strong>
+$4,126.50  │  <span class="code-value">180</span> ETH
+$4,127.00  │  <span class="code-value">220</span> ETH
+
+<span class="code-keyword">→ Akció:</span> TP-t $4,125.50-re tenni, NEM $4,130-ra!</pre>
+                </div>
+
+                <h3>Felismerési jelek:</h3>
+                <ul class="feature-list">
+                    <li><strong>Vastag fal</strong> = 5-10x nagyobb mint a szokásos szintek</li>
+                    <li>Ár többször nekimegy, de <strong>nem tudja átütni</strong></li>
+                    <li>Fal <strong>nem fogy</strong> (nem vásárolják fel)</li>
+                    <li>Gyakran <strong>whale manipulation</strong> vagy intézményi védelem</li>
+                </ul>
+
+                <h3>Stratégia:</h3>
+                <ol>
+                    <li>Azonosítsd a falat 5-10 tickkel feljebb/lejjebb</li>
+                    <li>TP-t tedd <strong>a fal elé</strong>, ne mögé</li>
+                    <li>Ha mégis átüti → újra belépés lehetséges</li>
+                    <li>Ha nem üti át → profitot realizáltál időben</li>
+                </ol>
+            </section>
+
+            <section id="aggressive-orders">
+                <h2>3. Agresszív Ellenirányú Market Order</h2>
+                
+                <p>Ha longolsz, és hirtelen jön egy <strong>nagy piaci eladási hullám</strong> (piros footprint bar, vagy order bookban „market sell sweep"), az azt mutatja, hogy <strong>shortosok erőből lépnek be</strong>.</p>
+
+                <p>Ha ezt <strong>többször látod egymás után</strong>, az jelzi, hogy elfordulhat az ár.</p>
+
+                <p>Ilyenkor nem érdemes a távoli TP-re várni → vagy <strong>zársz részben</strong>, vagy <strong>teljesen</strong>.</p>
+
+                <div class="code-block" style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336;">
+                    <h3 style="margin-top: 0;">⚠️ Veszélyjel</h3>
+                    <p>Több egymást követő agresszív market sell = erős ellenállás / fordulás jele</p>
+                </div>
+
+                <h3>Footprint Chart Példa:</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Gyertya 1:</span> Buy: <span class="code-value">800</span> | Sell: <span class="code-value">200</span>  ✅ Vételi dominancia
+<span class="code-keyword">Gyertya 2:</span> Buy: <span class="code-value">600</span> | Sell: <span class="code-value">400</span>  ⚠️ Eladók erősödnek
+<span class="code-keyword">Gyertya 3:</span> Buy: <span class="code-value">300</span> | Sell: <span class="code-string">1,200</span> 🔴 <strong>Agresszív sell!</strong>
+<span class="code-keyword">Gyertya 4:</span> Buy: <span class="code-value">250</span> | Sell: <span class="code-string">1,500</span> 🔴 <strong>Még erősebb sell!</strong>
+
+<span class="code-keyword">→ Akció:</span> Gyors exit! Momentum megfordult.</pre>
+                </div>
+
+                <h3>Felismerési módok:</h3>
+                <ul class="feature-list">
+                    <li><strong>Footprint chart:</strong> Piros (sell) dominancia hirtelen megnő</li>
+                    <li><strong>Order book:</strong> „Market sell sweep" - nagy piaci eladások</li>
+                    <li><strong>Volume spike:</strong> Hirtelen nagy volume eladói oldalon</li>
+                    <li><strong>Price action:</strong> Gyors wick lefelé nagy volumennél</li>
+                </ul>
+
+                <h3>Reakció:</h3>
+                <ol>
+                    <li><strong>1 agresszív sell:</strong> Figyelj, de ne pánikoljál</li>
+                    <li><strong>2-3 egymás után:</strong> Momentum fordulás valószínű</li>
+                    <li><strong>Akció:</strong> Részleges vagy teljes exit</li>
+                    <li><strong>Ne várj:</strong> Scalpban a gyors döntés számít</li>
+                </ol>
+            </section>
+
+            <section id="summary">
+                <h2>🔑 Röviden Scalpban</h2>
+
+                <div class="code-block" style="background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50;">
+                    <h3 style="margin-top: 0;">Momentum Jelek és Reakciók</h3>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                        <thead>
+                            <tr style="background: rgba(76, 175, 80, 0.2); border-bottom: 2px solid #4caf50;">
+                                <th style="padding: 0.75rem; text-align: left;">Jel</th>
+                                <th style="padding: 0.75rem; text-align: left;">Mit jelent?</th>
+                                <th style="padding: 0.75rem; text-align: left;">Akció</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid rgba(76, 175, 80, 0.3);">
+                                <td style="padding: 0.75rem;"><strong>Volume csökken</strong></td>
+                                <td style="padding: 0.75rem;">Momentum gyengül</td>
+                                <td style="padding: 0.75rem;">Exit közelebb</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(76, 175, 80, 0.3);">
+                                <td style="padding: 0.75rem;"><strong>Order book fal</strong></td>
+                                <td style="padding: 0.75rem;">Ár megfogva</td>
+                                <td style="padding: 0.75rem;">TP-t oda tenni, nem tovább</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.75rem;"><strong>Ellenirányú market order</strong></td>
+                                <td style="padding: 0.75rem;">Sokszor fordulás</td>
+                                <td style="padding: 0.75rem;">Gyors exit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Kulcs Megértés</h3>
+                <p><strong>Ezért mondják, hogy scalpban a TP nem fix mint swingben, hanem dinamikusan kell kezelned a momentum alapján.</strong></p>
+
+                <ul class="feature-list">
+                    <li>📊 <strong>Volume</strong> = vevők/eladók ereje</li>
+                    <li>📖 <strong>Order Book</strong> = ellenállás/támasz szintek</li>
+                    <li>⚡ <strong>Market Orders</strong> = agresszív belépők iránya</li>
+                    <li>🎯 <strong>Dinamikus TP</strong> = alkalmazkodás a momentum változásához</li>
+                </ul>
+
+                <div class="code-block" style="background: rgba(156, 39, 176, 0.1); border-left: 4px solid #9c27b0; margin-top: 1.5rem;">
+                    <h3 style="margin-top: 0;">💡 Pro Tipp</h3>
+                    <p>Ne ragaszkodj a fix TP-hez! Ha a momentum jelek azt mutatják, hogy gyengül a mozgás, jobb korábban profitot realizálni, mint visszaadni. A scalp kereskedés lényege a <strong>gyors, kis profitok halmozása</strong>, nem a nagy home run-ok várása.</p>
+                </div>
+            </section>
+
+            <section id="tools">
+                <h2>🛠️ Eszközök a Momentum Figyeléshez</h2>
+
+                <h3>Ajánlott Indikátorok:</h3>
+                <ul class="feature-list">
+                    <li><strong>Volume Profile</strong> - Volume eloszlás vizualizálása</li>
+                    <li><strong>Footprint Chart</strong> - Buy/Sell agresszió láthatóvá tétele</li>
+                    <li><strong>Order Book Heatmap</strong> - Falak és likviditás</li>
+                    <li><strong>CVD (Cumulative Volume Delta)</strong> - Vételi/eladási nyomás összesítve</li>
+                    <li><strong>OBV (On-Balance Volume)</strong> - Volume trend követés</li>
+                </ul>
+
+                <h3>Platform Javaslatok:</h3>
+                <ul>
+                    <li><strong>TradingView</strong> - Volume Profile, OBV</li>
+                    <li><strong>Bookmap</strong> - Order Book heatmap, liquidity</li>
+                    <li><strong>Sierra Chart</strong> - Footprint charts</li>
+                    <li><strong>Binance Order Book</strong> - Natív order book depth</li>
+                </ul>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#volume-decrease">Volume Csökkenése</a></li>
+                <li><a href="#order-book">Order Book Fal</a></li>
+                <li><a href="#aggressive-orders">Agresszív Market Orders</a></li>
+                <li><a href="#summary">Összefoglaló</a></li>
+                <li><a href="#tools">Eszközök</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- Search index -->
+    <script src="../search-index.js"></script>
+    <!-- Search functionality -->
+    <script src="../search.js"></script>
+    <!-- Main script -->
+    <script src="../script.js"></script>
+</body>
+</html>
