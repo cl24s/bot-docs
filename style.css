@@ -81,7 +81,7 @@ header {
 /* Navigation */
 nav {
     background-color: #2d3238;
-    padding: 0.8rem 2rem;
+    padding: 0.8rem 0;
     border-bottom: 1px solid #3a3f47;
 }
 
@@ -89,6 +89,9 @@ nav ul {
     list-style: none;
     display: flex;
     gap: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 calc((100vw - 1600px) / 2 + 1.5rem);
 }
 
 nav a {
@@ -107,6 +110,7 @@ nav a:hover, nav a.active {
     display: flex;
     max-width: 1600px;
     margin: 0 auto;
+    padding: 0 calc((100vw - 1600px) / 2);
 }
 
 /* Sidebar */
@@ -255,6 +259,40 @@ nav a:hover, nav a.active {
 .code-string { color: #ce9178; }
 .code-property { color: #9cdcfe; }
 .code-value { color: #b5cea8; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+/* Metric Card */
+.metric-card {
+    background-color: #1e2127;
+    border-left: 3px solid #007acc;
+    border-radius: 4px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+}
+
+.metric-card h4 {
+    color: #9cdcfe;
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.metric-card h4 code {
+    color: #4ec9b0;
+    background-color: #2d3238;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.95rem;
+}
+
+.metric-card p {
+    margin: 0.5rem 0;
+    color: #d4d4d4;
+}
+
+.metric-card p strong {
+    color: #c586c0;
+}
 
 /* Feature List */
 .feature-list {
@@ -643,13 +681,14 @@ nav a:hover, nav a.active {
     
     /* Navigation */
     nav {
-        padding: 0.6rem 1rem;
+        padding: 0.6rem 0;
         overflow-x: auto;
         white-space: nowrap;
     }
     
     nav ul {
         gap: 1rem;
+        padding: 0 1rem;
     }
     
     nav a {

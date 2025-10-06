@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroOB - Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html">Bot</a></li>
+            <li><a href="alapfogalmak.html">Alapok</a></li>
+            <li><a href="chris.html" class="active">Chris</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Chris</h3>
+            <ul>
+                <li><a href="chris.html"><i class="fas fa-chart-line"></i> Trend Mikró-időzítés</a></li>
+                <li><a href="momentum.html"><i class="fas fa-tachometer-alt"></i> Momentum Figyelés</a></li>
+                <li><a href="sp_tp.html"><i class="fas fa-crosshairs"></i> SP-TP Stratégia</a></li>
+                <li><a href="microob.html" class="active"><i class="fas fa-layer-group"></i> MicroOB</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>MicroOB - Order Book Mikrostruktúra</h1>
+            
+            <p>Az Order Book mikrostruktúra elemzése scalp trading számára. A modul valós idejű likviditási, nyomás- és árhatás-metrikákat szolgáltat a precíz belépési időzítéshez.</p>
+
+            <section id="metrikai">
+                <h2>Metrikák Áttekintése</h2>
+
+                <h3>Alapvető Ár és Spread</h3>
+                
+                <div class="metric-card">
+                    <h4><code>mid</code> - Középár (mid-price)</h4>
+                    <p><strong>Számítás:</strong> <code>(best_bid + best_ask) / 2</code></p>
+                    <p><strong>Mit mutat:</strong> A legjobb reprezentációja a „valós" pillanatnyi árnak. Minden relatív távolság (bps, imbalance, wall) ehhez viszonyít.</p>
+                    <p><strong>Scalp érték:</strong> Referencia pont minden egyéb metrikához.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>spread_bps</code> - Bid-ask spread bázispontban</h4>
+                    <p><strong>Számítás:</strong> <code>((ask − bid)/mid) * 10 000</code></p>
+                    <p><strong>Mit mutat:</strong> A piac likviditását és költségét.</p>
+                    <p><strong>Scalp érték:</strong> Kicsi spread → jó likviditás, gyors scalpolhatóság; nagy spread → "ragadós" piac.</p>
+                </div>
+
+                <h3>Imbalance Metrikák</h3>
+
+                <div class="metric-card">
+                    <h4><code>top_imbalance</code> - Az 1. szint (L1) volumeneinek aránya</h4>
+                    <p><strong>Számítás:</strong> <code>(bid₁_qty − ask₁_qty)/(bid₁_qty + ask₁_qty)</code></p>
+                    <p><strong>Mit mutat:</strong> A legfelső szintre koncentrálódó vételi vs eladási nyomás.</p>
+                    <p><strong>Scalp érték:</strong> Gyorsan jelzi, melyik oldal dominál.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>ob_imbalance_5_levels</code> - Összesített 5 szint-arány</h4>
+                    <p><strong>Számítás:</strong> <code>(Σbid₁₋₅ − Σask₁₋₅)/(Σösszes)</code></p>
+                    <p><strong>Mit mutat:</strong> Kiegyenlíti az L1 zajt.</p>
+                    <p><strong>Scalp érték:</strong> Ha +0.5 → vevői túlsúly, ha −0.5 → eladói túlsúly.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>bid_vs_ask_pressure</code> - Nyomás-irány címke</h4>
+                    <p><strong>Számítás:</strong> "bullish" ha imbalance > +0.2, "bearish" ha < −0.2, különben "neutral"</p>
+                    <p><strong>Mit mutat:</strong> Kvalitatív bias egyszerű formában.</p>
+                    <p><strong>Scalp érték:</strong> Gyorsan értelmezhető - AI promptban egyszerű: "buy pressure rising".</p>
+                </div>
+
+                <h3>Mélység és Slippage</h3>
+
+                <div class="metric-card">
+                    <h4><code>depth_quote</code> - Árhatás-arány a könyv mélységére</h4>
+                    <p><strong>Számítás:</strong> Becslés: a megadott notional (pl. 10k / 50k USDT) kitöltéséhez szükséges ár-változás hányada (<code>slippage_bps/1e4</code>)</p>
+                    <p><strong>Mit mutat:</strong> Mennyire mély a piac.</p>
+                    <p><strong>Scalp érték:</strong> Minél kisebb, annál jobb likviditás.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>slippage_est_bps</code> - Becsült slippage bázispontban</h4>
+                    <p><strong>Számítás:</strong> Könyv „végigsétálásával" kiszámolt bps-érték (10k, 50k notional)</p>
+                    <p><strong>Mit mutat:</strong> Mennyit mozdulna az ár, ha a bot piacra ütne.</p>
+                    <p><strong>Scalp érték:</strong> Valós költségbecslés.</p>
+                </div>
+
+                <h3>CVD és Trade Flow</h3>
+
+                <div class="metric-card">
+                    <h4><code>cvd_delta_20s</code> - CVD-változás az utolsó 20 s-ben</h4>
+                    <p><strong>Számítás:</strong> <code>∑ (q · ±1)</code> az utolsó 20 s trade-jeiből</p>
+                    <p><strong>Mit mutat:</strong> Melyik oldal volt az agresszor rövid távon.</p>
+                    <p><strong>Scalp érték:</strong> Negatív → eladók aktívabbak.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>cvd_trend_5m</code> - CVD trend az elmúlt 5 percben</h4>
+                    <p><strong>Számítás:</strong> Lineáris trend (up / down / flat) a CVD-re</p>
+                    <p><strong>Mit mutat:</strong> Középtávú order-flow irány.</p>
+                    <p><strong>Scalp érték:</strong> Segít kiszűrni, ha a momentum ellentmond az ártrendnek.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>large_trade_alert</code> - Nagy trade jelzés</h4>
+                    <p><strong>Számítás:</strong> Igaz, ha bármelyik trade > threshold (pl. 300k USDT) az utolsó 20 s-ben</p>
+                    <p><strong>Mit mutat:</strong> Intézményi aktivitás.</p>
+                    <p><strong>Scalp érték:</strong> Azonnali intézményi aktivitás detektor - scalpban gyakran trigger előtti "ütés".</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>tick_speed_ratio</code> - Trade-frekvencia arány</h4>
+                    <p><strong>Számítás:</strong> <code>(utolsó 20 s trade szám) / (5 perces átlag 20 s-enként)</code></p>
+                    <p><strong>Mit mutat:</strong> Piaci tempó változása.</p>
+                    <p><strong>Scalp érték:</strong> > 1 → felgyorsulás (breakout-esély), < 1 → lassulás (kifulladás).</p>
+                </div>
+
+                <h3>Wall Detection</h3>
+
+                <div class="metric-card">
+                    <h4><code>wall_score</code> - Fal-erősség egyenlege</h4>
+                    <p><strong>Számítás:</strong> <code>(bid_wall_strength − ask_wall_strength)/(összeg)</code></p>
+                    <p><strong>Tartomány:</strong> −1 … +1</p>
+                    <p><strong>Mit mutat:</strong> Melyik oldal dominál likviditásban.</p>
+                    <p><strong>Scalp érték:</strong> Erős bid-falak tartják az árat, erős ask-falak lenyomják.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>bid_wall_count</code> - Detektált bid falak száma</h4>
+                    <p><strong>Számítás:</strong> Hány szinten van qty > átlag × mult (pl. 3×)</p>
+                    <p><strong>Mit mutat:</strong> Támasz-szintek száma.</p>
+                    <p><strong>Scalp érték:</strong> Sok bid-fal → stabil támasz, range-es piac, buy-exhaustion valószínű.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>ask_wall_count</code> - Detektált ask falak száma</h4>
+                    <p><strong>Számítás:</strong> Ugyanaz ask oldalon</p>
+                    <p><strong>Mit mutat:</strong> Ellenállás-szintek száma.</p>
+                    <p><strong>Scalp érték:</strong> Sok ask-fal → ellenállás, profit-taking zóna, sell-exhaustion kockázat.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>bid_walls</code> - Lista a bid falakról</h4>
+                    <p><strong>Tartalom:</strong> Ár, qty, mid-távolság (bps)</p>
+                    <p><strong>Scalp érték:</strong> Hasznos a támasz-szintek pontos megjelölésére vagy SL-finomításra.</p>
+                </div>
+
+                <div class="metric-card">
+                    <h4><code>ask_walls</code> - Lista az ask falakról</h4>
+                    <p><strong>Tartalom:</strong> Ár, qty, mid-távolság (bps)</p>
+                    <p><strong>Scalp érték:</strong> Hasznos az ellenállás-zónák és spoofing detektálásához.</p>
+                </div>
+            </section>
+
+            <section id="hasznalat">
+                <h2>Használat Scalpingban</h2>
+
+                <h3>Belépési Időzítés</h3>
+                <ul class="feature-list">
+                    <li><strong>Imbalance ellenőrzés:</strong> <code>ob_imbalance_5_levels</code> > +0.3 long esetén, < -0.3 short esetén</li>
+                    <li><strong>Spread vizsgálat:</strong> <code>spread_bps</code> < 5 bps (jó likviditás)</li>
+                    <li><strong>Wall check:</strong> Nincs közeli fal az entry irányában (<code>ask_walls</code> / <code>bid_walls</code>)</li>
+                    <li><strong>CVD megerősítés:</strong> <code>cvd_delta_20s</code> egyező irányú</li>
+                    <li><strong>Tempo:</strong> <code>tick_speed_ratio</code> > 1.2 (felgyorsulás)</li>
+                </ul>
+
+                <h3>Exit Optimalizálás</h3>
+                <ul class="feature-list">
+                    <li><strong>TP placement:</strong> <code>ask_walls</code> / <code>bid_walls</code> előtt 0.05-0.10%</li>
+                    <li><strong>Slippage becslés:</strong> <code>slippage_est_bps</code> alapján exit méret optimalizálás</li>
+                    <li><strong>Pressure shift:</strong> <code>bid_vs_ask_pressure</code> váltás → gyors exit</li>
+                </ul>
+
+                <h3>Risk Management</h3>
+                <ul class="feature-list">
+                    <li><strong>Likviditás check:</strong> <code>depth_quote</code> alapján pozíció méret limitálás</li>
+                    <li><strong>Wall monitoring:</strong> <code>wall_score</code> hirtelen változás → pozíció csökkentés</li>
+                    <li><strong>Large trade alert:</strong> <code>large_trade_alert</code> = true → óvatosság</li>
+                </ul>
+            </section>
+
+            <section id="pelda">
+                <h2>Példa - MicroOB Snapshot</h2>
+                
+                <div class="code-block">
+                    <pre>{
+  <span class="code-property">"timestamp_utc"</span>: <span class="code-string">"2025-10-05T08:15:23Z"</span>,
+  <span class="code-property">"symbol"</span>: <span class="code-string">"ETHUSDT"</span>,
+  
+  <span class="code-property">"mid"</span>: <span class="code-value">2431.25</span>,
+  <span class="code-property">"spread_bps"</span>: <span class="code-value">3.2</span>,
+  
+  <span class="code-property">"top_imbalance"</span>: <span class="code-value">0.42</span>,
+  <span class="code-property">"ob_imbalance_5_levels"</span>: <span class="code-value">0.38</span>,
+  <span class="code-property">"bid_vs_ask_pressure"</span>: <span class="code-string">"bullish"</span>,
+  
+  <span class="code-property">"depth_quote"</span>: {
+    <span class="code-property">"10k_usdt"</span>: <span class="code-value">0.08</span>,
+    <span class="code-property">"50k_usdt"</span>: <span class="code-value">0.15</span>
+  },
+  
+  <span class="code-property">"slippage_est_bps"</span>: {
+    <span class="code-property">"10k"</span>: <span class="code-value">2.1</span>,
+    <span class="code-property">"50k"</span>: <span class="code-value">4.8</span>
+  },
+  
+  <span class="code-property">"cvd_delta_20s"</span>: <span class="code-value">+142000</span>,
+  <span class="code-property">"cvd_trend_5m"</span>: <span class="code-string">"up"</span>,
+  <span class="code-property">"large_trade_alert"</span>: <span class="code-value">false</span>,
+  <span class="code-property">"tick_speed_ratio"</span>: <span class="code-value">1.35</span>,
+  
+  <span class="code-property">"wall_score"</span>: <span class="code-value">0.28</span>,
+  <span class="code-property">"bid_wall_count"</span>: <span class="code-value">3</span>,
+  <span class="code-property">"ask_wall_count"</span>: <span class="code-value">1</span>,
+  
+  <span class="code-property">"bid_walls"</span>: [
+    { <span class="code-property">"price"</span>: <span class="code-value">2430.50</span>, <span class="code-property">"qty"</span>: <span class="code-value">125.4</span>, <span class="code-property">"bps_from_mid"</span>: <span class="code-value">-30.8</span> },
+    { <span class="code-property">"price"</span>: <span class="code-value">2429.00</span>, <span class="code-property">"qty"</span>: <span class="code-value">98.2</span>, <span class="code-property">"bps_from_mid"</span>: <span class="code-value">-92.5</span> }
+  ],
+  
+  <span class="code-property">"ask_walls"</span>: [
+    { <span class="code-property">"price"</span>: <span class="code-value">2432.80</span>, <span class="code-property">"qty"</span>: <span class="code-value">87.3</span>, <span class="code-property">"bps_from_mid"</span>: <span class="code-value">+63.7</span> }
+  ]
+}</pre>
+                </div>
+
+                <div class="version-badge">Bullish setup - jó belépési pont LONG-ra</div>
+            </section>
+
+            <section id="checklist">
+                <h2>MicroOB Checklist</h2>
+                
+                <ul class="feature-list">
+                    <li><strong>Spread OK?</strong> <code>spread_bps</code> < 5</li>
+                    <li><strong>Imbalance egyezik?</strong> <code>ob_imbalance_5_levels</code> irányhelyes</li>
+                    <li><strong>Nincs közeli fal?</strong> <code>ask_walls</code>/<code>bid_walls</code> check</li>
+                    <li><strong>CVD megerősít?</strong> <code>cvd_delta_20s</code> és <code>cvd_trend_5m</code> egyező</li>
+                    <li><strong>Tempo megfelelő?</strong> <code>tick_speed_ratio</code> > 1.0</li>
+                    <li><strong>Slippage elfogadható?</strong> <code>slippage_est_bps</code> alapján</li>
+                    <li><strong>Nincs whale alert?</strong> <code>large_trade_alert</code> = false</li>
+                </ul>
+
+                <div class="version-badge">Ha minden OK → GO, különben WAIT</div>
+            </section>
+
+            <section id="osszekep">
+                <h2>Összkép</h2>
+                
+                <p>A MicroOB metrikák három fő réteget alkotnak, amelyek együtt adják a teljes mikrostruktúra képet:</p>
+
+                <h3>Pillanatnyi Likviditási Állapot</h3>
+                <p><code>mid</code> / <code>spread</code> / <code>imbalance</code> mutatók → a piac aktuális likviditási helyzete és azonnali vételi/eladási nyomás.</p>
+
+                <h3>Rövidtávú Viselkedés és Momentum</h3>
+                <p><code>cvd</code> / <code>tick_speed</code> → melyik oldal az agresszor, és milyen tempóban zajlik a kereskedés.</p>
+
+                <h3>Rejtett Likviditási Struktúra</h3>
+                <p><code>wall_score</code> + <code>wall_count</code> + <code>wall_listák</code> → támasz-ellenállás rétegek, ahol a nagyobb likviditás koncentrálódik.</p>
+
+                <div class="version-badge">Együttes értelmezés</div>
+                <p>Ezek a metrikák együtt adják a <strong>microstructure snapshot</strong>-ot, ami alapján az AI vagy a stratégia eldönti:</p>
+                <ul class="feature-list">
+                    <li><strong>Megtartják vagy áttörik a szintet?</strong> Wall-ok vs momentum</li>
+                    <li><strong>A momentum él vagy kifulladt?</strong> CVD trend vs tick speed</li>
+                    <li><strong>Érdemes-e belépni / várni / zárni?</strong> Összes jel együttes értékelése</li>
+                </ul>
+            </section>
+
+            <section id="implementacio">
+                <h2>Implementáció</h2>
+                
+                <p>A MicroOB engine a <code>data\helper\microOB.py</code> fájlban található.</p>
+
+                <h3>Használat</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">from</span> data.helper.microOB <span class="code-keyword">import</span> MicroOB
+
+<span class="code-comment"># Engine inicializálás</span>
+engine = MicroOB()
+
+<span class="code-comment"># Market data feldolgozás</span>
+micro_block = engine.compute(market_data)</pre>
+                </div>
+
+                <h3>Bemenet (market_data)</h3>
+                <div class="code-block">
+                    <pre>{
+  <span class="code-property">"orderbook"</span>: {
+    <span class="code-property">"lastUpdateId"</span>: <span class="code-value">123456789</span>,
+    <span class="code-property">"bids"</span>: [[<span class="code-value">2431.50</span>, <span class="code-value">12.5</span>], [<span class="code-value">2431.40</span>, <span class="code-value">8.3</span>], ...],
+    <span class="code-property">"asks"</span>: [[<span class="code-value">2431.60</span>, <span class="code-value">10.2</span>], [<span class="code-value">2431.70</span>, <span class="code-value">15.1</span>], ...]
+  },
+  <span class="code-property">"tape"</span>: {
+    <span class="code-property">"agg_20s"</span>: [
+      { <span class="code-property">"p"</span>: <span class="code-value">2431.55</span>, <span class="code-property">"q"</span>: <span class="code-value">2.5</span>, <span class="code-property">"m"</span>: <span class="code-value">false</span>, <span class="code-property">"T"</span>: <span class="code-value">1696512000000</span> },
+      ...
+    ],
+    <span class="code-property">"agg_5m"</span>: [...],
+    <span class="code-property">"threshold_notional_large"</span>: <span class="code-value">500000</span>
+  }
+}</pre>
+                </div>
+
+                <h3>Kimenet (micro_block)</h3>
+                <p>A <code>compute()</code> metódus visszaadja az összes MicroOB metrikát egy dictionary-ben, amely közvetlenül használható a stratégia döntéshozatalához.</p>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#metrikai">Metrikák</a>
+                    <ul>
+                        <li><a href="#metrikai">Ár és Spread</a></li>
+                        <li><a href="#metrikai">Imbalance</a></li>
+                        <li><a href="#metrikai">Mélység</a></li>
+                        <li><a href="#metrikai">CVD</a></li>
+                        <li><a href="#metrikai">Wall Detection</a></li>
+                    </ul>
+                </li>
+                <li><a href="#hasznalat">Használat</a></li>
+                <li><a href="#pelda">Példa</a></li>
+                <li><a href="#checklist">Checklist</a></li>
+                <li><a href="#osszekep">Összkép</a></li>
+                <li><a href="#implementacio">Implementáció</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- Search index -->
+    <script src="../search-index.js"></script>
+    <!-- Search functionality -->
+    <script src="../search.js"></script>
+    <!-- Main script -->
+    <script src="../script.js"></script>
+</body>
+</html>

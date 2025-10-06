@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SP-TP Stratégia - Trading Bot Dokumentáció</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span>Trading Bot Dokumentáció</span>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: #888;"></i>
+                <input type="text" placeholder="Keresés">
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="../index.html">Kezdőlap</a></li>
+            <li><a href="bothasznalat.html">Bot</a></li>
+            <li><a href="alapfogalmak.html">Alapok</a></li>
+            <li><a href="chris.html" class="active">Chris</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Chris</h3>
+            <ul>
+                <li><a href="chris.html"><i class="fas fa-chart-line"></i> Trend Mikró-időzítés</a></li>
+                <li><a href="momentum.html"><i class="fas fa-tachometer-alt"></i> Momentum Figyelés</a></li>
+                <li><a href="sp_tp.html" class="active"><i class="fas fa-crosshairs"></i> SP-TP Stratégia</a></li>
+                <li><a href="microob.html"><i class="fas fa-layer-group"></i> MicroOB</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Stop Loss és Take Profit Stratégia Scalpban</h1>
+            
+            <p>Részletes útmutató a helyes SL/TP szintek megválasztásához és menet közbeni kezeléséhez scalp tradingben (max 30 perces pozíciók).</p>
+
+            <section id="sl-ellenorzes">
+                <h2>🔻 1. Stop Loss (SL) Ellenőrzése</h2>
+                
+                <h3>Strukturális szint alatt/fölött</h3>
+                <p>SL-t mindig egy market structure ponton kívül rakd (előző swing low, támasz/ellenállás, order block, trendvonal, VWAP).</p>
+                <ul class="feature-list">
+                    <li><strong>Túl közel:</strong> Könnyen kiütnek zajból</li>
+                    <li><strong>Túl messze:</strong> Felesleges kockázat</li>
+                </ul>
+
+                <h3>ATR alapú ellenőrzés</h3>
+                <p>Nézd meg az ATR%-ot (Average True Range) a választott idősíkon:</p>
+                <ul>
+                    <li>Ha SL &lt;0.5× ATR → zajból ki fogják szedni</li>
+                    <li>Ha SL &gt;2-3× ATR → túl nagy a risk</li>
+                </ul>
+
+                <h3>Scalp specifikus SL</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Nagyon szoros kell legyen:</span> 0.2–0.5%
+<span class="code-keyword">BTC-nél:</span> ~50–150 USD
+<span class="code-keyword">Altoknál:</span> 0.5–1%
+
+<span class="code-keyword">Mindig micro-structure mögé:</span>
+- Előző 1m/3m gyertya low/high
+- Kisebb order block
+- VWAP alsó/felső band
+
+<span class="code-keyword">ATR check:</span> 1m ATR × 1.2–1.5
+<span class="code-keyword">Invalidáció logika:</span> ahol a setup gondolatod ott bukik meg</pre>
+                </div>
+
+                <h3>RR arány</h3>
+                <p>Legalább <strong>1:1.2 – 1:2 R:R</strong> legyen. Ha az SL túl nagy a TP-hez képest, akkor nem érdemes tartani.</p>
+            </section>
+
+            <section id="tp-ellenorzes">
+                <h2>🟢 2. Take Profit (TP) Ellenőrzése</h2>
+                
+                <h3>Scalp specifikus TP</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Közelibb TP-k:</span> első TP 0.5–1.0%, aztán rész-zárás
+
+<span class="code-keyword">Liquidity hunt zónák:</span>
+- Előző 5m/15m wick teteje/alja
+- Nagy order book fal
+
+<span class="code-keyword">EMA/VWAP confluence:</span>
+- Ha longolsz és közelben 200 EMA 5m → tökéletes TP cél
+
+<span class="code-keyword">Scalp RR logika:</span> 1:1.2 – 1:2 az ideális</pre>
+                </div>
+
+                <h3>Első cél</h3>
+                <p>Mindig logikus struktúrális szintre (előző high/low, FVG zárás, order block).</p>
+
+                <h3>Confluence</h3>
+                <p>Minél több jel utal arra, hogy ott megállhat az ár, annál jobb TP szint.</p>
+
+                <h3>Részleges zárás</h3>
+                <p>Sokszor érdemes TP1-et konzervatív helyre, és hagyni egy részt TP2-re. Így ha a piac fordul, legalább profitot realizáltál.</p>
+            </section>
+
+            <section id="momentum-figyeles">
+                <h2>⚡ 3. Momentum Figyelés (Order Flow)</h2>
+                
+                <p>Scalpban a TP nem fix, hanem <strong>dinamikusan kell kezelni</strong> a momentum alapján.</p>
+
+                <h3>Volume csökkenése</h3>
+                <div class="code-block">
+                    <pre>Ha longban vagy és az ár szépen indult felfelé, 
+de a volume gyertyánként csökken → vevők kifulladnak
+
+<span class="code-keyword">Példa:</span> breakout long után a következő 3 gyertya zöld, 
+de minden gyertya alatt kisebb volume 
+→ valószínű "fake breakout" / kifulladás
+
+<span class="code-keyword">Teendő:</span> TP közelebb hozása vagy részben zárás</pre>
+                </div>
+
+                <h3>OB (Order Book) elnyeli a trendet</h3>
+                <p>Ha látod, hogy felfelé mész longgal, de 5–10 tickkel feljebb vastag eladói fal ül order bookban (pl. 5M USDT sell wall), és nem fogy:</p>
+                <ul class="feature-list">
+                    <li>Ez azt jelzi, hogy a trendet "fékeli" valaki</li>
+                    <li>Ha többször nekimegy, de nem tudja átütni → lefordul</li>
+                    <li><strong>Teendő:</strong> TP előbb zárni vagy közelebb húzni</li>
+                </ul>
+
+                <h3>Agresszív ellenirányú market order</h3>
+                <p>Ha longolsz, és hirtelen jön egy nagy piaci eladási hullám (piros footprint bar, vagy order bookban "market sell sweep"):</p>
+                <ul>
+                    <li>Azt mutatja, hogy shortosok erőből lépnek be</li>
+                    <li>Ha ezt többször látod egymás után → elfordulhat az ár</li>
+                    <li><strong>Teendő:</strong> Nem érdemes távoli TP-re várni → részben vagy teljesen zárni</li>
+                </ul>
+
+                <h3>Röviden</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Volume csökken</span> → momentum gyengül → exit közelebb
+<span class="code-keyword">Order book fal</span> megfogja az árat → TP-t oda tenni, nem tovább
+<span class="code-keyword">Ellenirányú agresszív market order</span> → sokszor fordulás → gyors exit</pre>
+                </div>
+            </section>
+
+            <section id="atfordulas-meres">
+                <h2>📊 4. Átfordulások Mérése</h2>
+                
+                <h3>Miért fordul át a trend scalpban?</h3>
+                <ul class="feature-list">
+                    <li><strong>Trend csak irányt ad</strong> (pl. 5m/15m = long bias)</li>
+                    <li><strong>Fordulás order flow-ból jön:</strong> nagy market sell/buy hullám, order book imbalance, funding, OI változás</li>
+                    <li>Ha a bot csak EMA-kat, RSI-t, candle pattern-t figyel → lassú lesz a reagálás</li>
+                </ul>
+
+                <h3>Delta (Buy vs Sell Volume)</h3>
+                <div class="code-block">
+                    <pre><span class="code-keyword">Számítás:</span> market buy volume – market sell volume (1m/30s tick szinten)
+
+<span class="code-keyword">Értelmezés:</span>
+- Delta folyamatosan pozitív → long momentum
+- Hirtelen negatív → short fordulás
+
+<span class="code-keyword">Példa ETH:</span> utolsó 3 percben +15M buy delta volt, 
+de hirtelen -10M sell delta → momentum shift</pre>
+                </div>
+
+                <h3>CVD (Cumulative Volume Delta)</h3>
+                <p>Mutatja, hogy hosszabb távon ki nyomja jobban (buyers vs sellers):</p>
+                <ul>
+                    <li>CVD folyamatosan emelkedik → buy control</li>
+                    <li>Elkezd törni lefelé, miközben az ár még felfelé van → divergencia, közel a fordulás</li>
+                </ul>
+
+                <h3>Order Book Imbalance</h3>
+                <p>Ha a bid side (vevők) 60% volt, de 1 perc alatt leesik 45%-ra, és az ask oldal nő → shortosok dominálnak.</p>
+
+                <h3>Nagy piaci megbízás (Aggressive Orders)</h3>
+                <p>Ha hirtelen 1–2M USDT feletti market sell order érkezik (és nem veszik vissza), akkor az rövid távon lenyomja az árat.</p>
+            </section>
+
+            <section id="menet-kozben">
+                <h2>🔄 5. Menet Közbeni Változtatások</h2>
+                
+                <h3>SL húzás BE-re (break-even)</h3>
+                <p>Amint elérte az ár az RR 1:1 szintet, érdemes áthúzni nullába. Így ha fordul, nem buksz.</p>
+
+                <h3>Partial close</h3>
+                <p>Pl. 50% pozíció TP1-nél, maradék mehet TP2-re → így scalp közben is zársz profitot.</p>
+
+                <h3>Market structure változás</h3>
+                <p>Ha új HL/HH alakul ki (pl. trend erősödik), átrakhatod az SL-t új swing low fölé/alá.</p>
+
+                <h3>Time-based exit</h3>
+                <p>Scalpban ha <strong>15–20 perc után nem indul el</strong> az ár, zárd, mert esélyes hogy "dead trade".</p>
+
+                <h3>Momentum elvesztése</h3>
+                <p>Ha látod, hogy OB-ban fordul, vagy nagy eladói fal jelent meg order bookban, érdemes TP-t közelebb hozni.</p>
+            </section>
+
+            <section id="hysteresis">
+                <h2>🛡️ 6. Hysteresis - "Kis Piros" Kivédése</h2>
+                
+                <p>Hogyan védjük ki, hogy egy apró visszahúzás (kis piros gyertya) ne vágjon ki a pozícióból?</p>
+
+                <h3>Mikor NEM lépünk ki?</h3>
+                <p>Egyetlen "halvány" piros gyertya <strong>nem exit ok</strong>, ha az alábbiak közül legalább 3 igaz:</p>
+                <ol>
+                    <li><strong>Struktúra tart:</strong> 1m utolsó HL/HH nem sérül</li>
+                    <li><strong>Delta kicsi:</strong> negatív delta &lt; 20–30% az előző zöld bar pozitív deltájához képest</li>
+                    <li><strong>CVD trend up:</strong> 3 perces gördülő CVD meredekség ≥ 0</li>
+                    <li><strong>VWAP/EMA támasz:</strong> close ≥ 1m VWAP vagy ≥ EMA9</li>
+                    <li><strong>Nincs agresszív eladás:</strong> nincs ≥ $1.5M market sell spike</li>
+                </ol>
+
+                <h3>Mikor tekintjük valódi átfordulásnak?</h3>
+                <p>Csak akkor, ha <strong>mind a négy teljesül</strong>:</p>
+                <ol>
+                    <li><strong>Struktúratörés:</strong> 1m-en HL törés (zárás előző swing low alatt) ÉS close &lt; EMA9/VWAP</li>
+                    <li><strong>Delta szabály:</strong> 2 egymást követő bar negatív delta, összesen ≤ −(60–80%) az előző 3 bar pozitív deltasumához képest</li>
+                    <li><strong>CVD fordul:</strong> 3–5 perces gördülő CVD meredekség negatív</li>
+                    <li><strong>Aggresszív eladók:</strong> ≥ $1.5–2.0M market sell sweep VAGY order book imbalance ask/bid ≥ 62/38 legalább 60–90 mp-ig</li>
+                </ol>
+
+                <h3>Időalapú "grace period"</h3>
+                <ul class="feature-list">
+                    <li>Belépés után 2–3 percig a bot ignorál egyetlen ellentétes deltás vagy kis piros jelet</li>
+                    <li>Kivéve: nagy sell-sweep (≥ $1.5M) és struktúratörés együtt</li>
+                    <li>Fordulás megerősítéséhez kérj ≥ 90 másodperc folyamatos negatív jelet</li>
+                </ul>
+
+                <div class="code-block" style="background: rgba(33, 150, 243, 0.1); border-left: 4px solid #2196F3; margin-top: 1.5rem;">
+                    <p style="margin: 0;"><em>💡 Ha szeretnéd, adok egy mini Python vázat a delta/CVD/imbalance számolására és a fenti szabályok bekötésére a botodba.</em></p>
+                </div>
+            </section>
+
+            <section id="checklist">
+                <h2>✅ Scalp Checklista</h2>
+                
+                <h3>Belépés előtt</h3>
+                <ul class="feature-list">
+                    <li>☑ SL &lt;0.5% és mindig micro-structure mögött van?</li>
+                    <li>☑ TP1 logikus (előző wick, VWAP/EMA érintés)?</li>
+                    <li>☑ Min. RR ≥1:1.2 megvan?</li>
+                    <li>☑ Terveztél partial zárást?</li>
+                    <li>☑ SL túl szoros? (ATR alatt → veszély)</li>
+                    <li>☑ SL túl messze? (rossz RR → nem éri meg)</li>
+                    <li>☑ TP logikus szint? (előző csúcs, likviditás)</li>
+                    <li>☑ Van B-terv (partial close, trailing stop)?</li>
+                </ul>
+
+                <h3>Menet közben</h3>
+                <ul class="feature-list">
+                    <li>☑ Ha 10–15 perc alatt nem indul → exit</li>
+                    <li>☑ Volume csökken? → TP közelebb</li>
+                    <li>☑ Order book fal? → TP előtte</li>
+                    <li>☑ Ellenirányú market order? → gyors exit</li>
+                    <li>☑ RR 1:1 elérve? → SL → BE</li>
+                </ul>
+            </section>
+
+
+            <section id="validalas">
+                <h2>📈 Hogyan Bizonyítsd Be, Hogy Működik?</h2>
+                
+                <h3>Fázisok</h3>
+                <ol>
+                    <li><strong>Visszateszt:</strong> tick/1s vagy legalább 1m "trade prints" rekonstrukcióval, out-of-sample és walk-forward</li>
+                    <li><strong>Paper/Sim:</strong> valós idejű feed, valós díj+slippage emulációval</li>
+                    <li><strong>Mikrolot:</strong> 1–2 USDT kockázat/trade, majd A/B: order-flow modul ON vs OFF</li>
+                    <li><strong>Lassan skálázni:</strong> csak ha a metrikák tartósak</li>
+                </ol>
+
+                <h3>Metrikák (díjakkal)</h3>
+                <ul class="feature-list">
+                    <li>Expectancy/trade</li>
+                    <li>Profit Factor ≥ 1.2–1.4 (scalp)</li>
+                    <li>Sharpe &gt; 1.0 (intra)</li>
+                    <li>MaxDD/R &lt; 10–15R</li>
+                    <li>Hit rate és Payoff ratio stabilitása</li>
+                    <li>Avg trade time illeszkedik (≤15p)</li>
+                    <li>Streak-analízis (rossz sorozatok eloszlása)</li>
+                </ul>
+            </section>
+
+            <section id="tobbbot">
+                <h2>🤖 Több Bot = Nagyobb Esély</h2>
+                
+                <h3>Orchestrator / ensemble</h3>
+                <p>Nyitás csak ha N-ből legalább M modul egyszerre "zöld":</p>
+                <ul>
+                    <li>trend + VWAP + delta</li>
+                    <li>VWAP + imbalance + MACD shift</li>
+                </ul>
+
+                <h3>Súlyozott szavazás</h3>
+                <p>Order-flow jelek súlya &gt; klasszikus indikátoroké</p>
+
+                <h3>Dinamikus tőkeallokáció</h3>
+                <p>Modulonkénti live hit-rate / PF alapján emelni/csökkenteni a size-ot</p>
+            </section>
+
+            <section id="buktatok">
+                <h2>⚠️ Tipikus Buktatók</h2>
+                
+                <ul class="feature-list">
+                    <li><strong>Túlillesztés:</strong> paraméter-vadászat a múlt adatra</li>
+                    <li><strong>Latency/queueing:</strong> a végrehajtásban</li>
+                    <li><strong>Rezsimek váltása:</strong> range→trend vagy fordítva – kell regime-detektor és automata "no-trade" mód</li>
+                    <li><strong>Költségek alulbecslése:</strong> főleg vol/spread spike-okban, hírek körül</li>
+                    <li><strong>Nem konzervatív kill-switch:</strong> hagyod elszabadulni a napi bukót</li>
+                </ul>
+            </section>
+
+            <section id="osszefoglalas">
+                <h2>🎓 Összefoglalás</h2>
+                
+                <div class="code-block">
+                    <pre><span class="code-keyword">SL mindig ott legyen, ahol az ötleted invalidálódik.</span>
+
+<span class="code-keyword">TP ott legyen, ahol más elkezd profitot zárni (liquidity zone).</span>
+
+<span class="code-keyword">Ha menet közben változik a piac</span> (új struktúra, momentum törik), 
+akkor SL/TP-t igazítasz.
+
+<span class="code-keyword">Scalpnál a lényeg:</span> nem a nagy mozgást kell megfogni, 
+hanem a likviditás elérését.
+
+<span class="code-keyword">Kulcs:</span> mérhetően (díjakkal együtt) pozitív várható értéket 
+mutasson több piaci rezsimben, és legyen kill-switch + 
+no-trade védelem a rossz napokra.</pre>
+                </div>
+            </section>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="toc">
+            <h4>Tartalomjegyzék</h4>
+            <ul>
+                <li><a href="#sl-ellenorzes">SL Ellenőrzése</a></li>
+                <li><a href="#tp-ellenorzes">TP Ellenőrzése</a></li>
+                <li><a href="#momentum-figyeles">Momentum Figyelés</a></li>
+                <li><a href="#atfordulas-meres">Átfordulások Mérése</a></li>
+                <li><a href="#menet-kozben">Menet Közbeni Változtatások</a></li>
+                <li><a href="#hysteresis">Hysteresis</a></li>
+                <li><a href="#checklist">Checklist</a></li>
+                <li><a href="#validalas">Validálás</a></li>
+                <li><a href="#tobbbot">Több Bot</a></li>
+                <li><a href="#buktatok">Buktatók</a></li>
+                <li><a href="#osszefoglalas">Összefoglalás</a></li>
+            </ul>
+        </aside>
+    </div>
+</body>
+</html>
