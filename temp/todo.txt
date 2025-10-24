@@ -1,0 +1,1 @@
+Trade adatok, lekérdezése, adott időközönként
